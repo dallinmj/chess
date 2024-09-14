@@ -22,16 +22,48 @@ public class BishopCalculator {
         while (x < 8 && y < 8) {
              x++;
              y++;
-             move = new ChessMove(new ChessPosition(x, y), new ChessPosition(x, y), null);
+             move = new ChessMove(new ChessPosition(x - 1, y - 1), new ChessPosition(x, y), null);
              validMoves.add(move);
         }
 
-        // Up & Left
+        Collection<tuple> coordinates = new ArrayList<>();
 
+        // Up & Left
+        x = X;
+        y = Y;
+        while (x > 0 && y < 8) {
+            x--;
+            y++;
+            move = new ChessMove(new ChessPosition(x + 1, y - 1), new ChessPosition(x, y), null);
+            validMoves.add(move);
+        }
 
         // Down & Right
+        x = X;
+        y = Y;
+        while (x < 8 && y > 0) {
+            x++;
+            y--;
+            move = new ChessMove(new ChessPosition(x - 1, y + 1), new ChessPosition(x, y), null);
+            validMoves.add(move);
+        }
 
         // Down & Left
+        x = X;
+        y = Y;
+        while (x > 0 && y > 0) {
+            x--;
+            y--;
+            move = new ChessMove(new ChessPosition(x + 1, y + 1), new ChessPosition(x, y), null);
+            validMoves.add(move);
+        }
+
+//        new int[][]{
+//                {6, 5}, {7, 6}, {8, 7},
+//                {4, 5}, {3, 6}, {2, 7}, {1, 8},
+//                {4, 3}, {3, 2}, {2, 1},
+//                {6, 3}, {7, 2}, {8, 1},
+//        }
 
 
         System.out.println(validMoves.toArray().length);

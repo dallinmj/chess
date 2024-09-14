@@ -52,9 +52,13 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+        // Make variable with pieceType
+        PieceType pieceType = getPieceType();
+        Collection<ChessMove> moves = new ArrayList<>();
+        if (pieceType == PieceType.BISHOP) {
+            moves = BishopCalculator.potentialMoves(board, myPosition);
+        }
 
-        Collection<ChessMove> validMoves = new ArrayList<>();
-
-        return validMoves;
+        return moves;
     }
 }

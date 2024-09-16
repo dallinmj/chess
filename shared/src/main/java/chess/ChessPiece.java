@@ -56,7 +56,7 @@ public class ChessPiece {
         PieceType pieceType = getPieceType();
         Collection<ChessMove> moves = new ArrayList<>();
         if (pieceType == PieceType.BISHOP) {
-            moves = BishopCalculator.potentialMoves(board, myPosition);
+            moves = BishopCalculator.potentialMoves(board, myPosition, pieceColor);
         }
 
         return moves;

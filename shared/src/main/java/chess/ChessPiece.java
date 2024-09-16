@@ -59,6 +59,8 @@ public class ChessPiece {
             moves = ChessPieceCalculator.Bishop(board, myPosition, pieceColor);
         } else if (pieceType == PieceType.KING) {
             moves = ChessPieceCalculator.King(board, myPosition, pieceColor);
+        } else if (pieceType == PieceType.KNIGHT) {
+            moves = ChessPieceCalculator.Knight(board, myPosition, pieceColor);
         }
 
         return moves;

@@ -18,7 +18,7 @@ public class KingCalculator {
         ChessPosition originalPosition = new ChessPosition(y, x);
 
         // Up & Right
-        if (x + 1 < 8 && y + 1 < 8) {
+        if (x + 1 <= 8 && y + 1 <= 8) {
             move = new ChessMove(originalPosition, new ChessPosition(y + 1, x + 1), null);
             String checkPiece = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y + 1, x + 1), teamColor);
             if (checkPiece.equals("empty") || checkPiece.equals("enemy")) {
@@ -27,7 +27,7 @@ public class KingCalculator {
         }
 
         // Down & Right
-        if (x + 1 < 8 && y - 1 > 0) {
+        if (x + 1 <= 8 && y - 1 > 0) {
             move = new ChessMove(originalPosition, new ChessPosition(y - 1, x + 1), null);
             String checkPiece = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y - 1, x + 1), teamColor);
             if (checkPiece.equals("empty") || checkPiece.equals("enemy")) {
@@ -45,7 +45,7 @@ public class KingCalculator {
             }
 
         // Up & Left
-        if (x - 1 > 0 && y + 1 < 8) {
+        if (x - 1 > 0 && y + 1 <= 8) {
             move = new ChessMove(originalPosition, new ChessPosition(y + 1, x - 1), null);
             String checkPiece = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y + 1, x - 1), teamColor);
             if (checkPiece.equals("empty") || checkPiece.equals("enemy")) {
@@ -54,7 +54,7 @@ public class KingCalculator {
         }
 
         // Up
-        if (y + 1 < 8) {
+        if (y + 1 <= 8) {
             move = new ChessMove(originalPosition, new ChessPosition(y + 1, x), null);
             String checkPiece = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y + 1, x), teamColor);
             if (checkPiece.equals("empty") || checkPiece.equals("enemy")) {
@@ -72,7 +72,7 @@ public class KingCalculator {
         }
 
         // Right
-        if (x + 1 < 8) {
+        if (x + 1 <= 8) {
             move = new ChessMove(originalPosition, new ChessPosition(y, x + 1), null);
             String checkPiece = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y, x + 1), teamColor);
             if (checkPiece.equals("empty") || checkPiece.equals("enemy")) {

@@ -84,21 +84,13 @@ public class BishopCalculator {
             }
             validMoves.add(move);
         }
-
-//        new int[][]{
-//                {6, 5}, {7, 6}, {8, 7}, up right
-//                {4, 5}, {3, 6}, {2, 7}, {1, 8}, down right
-//                {4, 3}, {3, 2}, {2, 1}, down left
-//                {6, 3}, {7, 2}, {8, 1}, up left
-//        }
-
         return validMoves;
     }
+
     /*
     Check to see if there is a piece on the potential move
      */
     public static String checkForPiece(ChessBoard board, ChessPosition position, ChessGame.TeamColor teamColor){
-//        boolean piece = board.getPiece(new ChessPosition(position.getRow(), position.getColumn())) != null;
         ChessPiece piece = board.getPiece(position);
         if (piece != null){
             // Compare Bishop team with piece team

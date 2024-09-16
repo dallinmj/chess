@@ -9,7 +9,7 @@ Calculate the potential moves for the Bishop piece depending on its position and
 public class BishopCalculator {
 
     public static Collection<ChessMove> potentialMoves(ChessBoard board, ChessPosition position, ChessGame.TeamColor teamColor) {
-        //Import needed info (Location, board)
+        //Import needed info (Location, board, teamColor)
         Collection<ChessMove> validMoves = new ArrayList<>();
         int x = position.getColumn();
         int y = position.getRow();
@@ -24,7 +24,7 @@ public class BishopCalculator {
              x++;
              y++;
              move = new ChessMove(originalPosition, new ChessPosition(y, x), null);
-             String checkPiece = checkForPiece(board, new ChessPosition(y, x), teamColor);
+             String checkPiece = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y, x), teamColor);
              if (checkPiece.equals("teammate")){
                  break;
              } else if (checkPiece.equals("enemy")){
@@ -41,7 +41,7 @@ public class BishopCalculator {
             x++;
             y--;
             move = new ChessMove(originalPosition, new ChessPosition(y, x), null);
-            String checkPiece = checkForPiece(board, new ChessPosition(y, x), teamColor);
+            String checkPiece = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y, x), teamColor);
             if (checkPiece.equals("teammate")){
                 break;
             } else if (checkPiece.equals("enemy")){
@@ -58,7 +58,7 @@ public class BishopCalculator {
             x--;
             y--;
             move = new ChessMove(originalPosition, new ChessPosition(y, x), null);
-            String checkPiece = checkForPiece(board, new ChessPosition(y, x), teamColor);
+            String checkPiece = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y, x), teamColor);
             if (checkPiece.equals("teammate")){
                 break;
             } else if (checkPiece.equals("enemy")){
@@ -75,7 +75,7 @@ public class BishopCalculator {
             x--;
             y++;
             move = new ChessMove(originalPosition, new ChessPosition(y, x), null);
-            String checkPiece = checkForPiece(board, new ChessPosition(y, x), teamColor);
+            String checkPiece = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y, x), teamColor);
             if (checkPiece.equals("teammate")){
                 break;
             } else if (checkPiece.equals("enemy")){
@@ -85,20 +85,5 @@ public class BishopCalculator {
             validMoves.add(move);
         }
         return validMoves;
-    }
-
-    /*
-    Check to see if there is a piece on the potential move
-     */
-    public static String checkForPiece(ChessBoard board, ChessPosition position, ChessGame.TeamColor teamColor){
-        ChessPiece piece = board.getPiece(position);
-        if (piece != null){
-            // Compare Bishop team with piece team
-            if (piece.getTeamColor() == teamColor){
-                return "teammate";
-            }
-            return "enemy";
-        }
-        return "empty";
     }
 }

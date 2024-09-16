@@ -56,7 +56,9 @@ public class ChessPiece {
         PieceType pieceType = getPieceType();
         Collection<ChessMove> moves = new ArrayList<>();
         if (pieceType == PieceType.BISHOP) {
-            moves = BishopCalculator.potentialMoves(board, myPosition, pieceColor);
+            moves = ChessPieceCalculator.Bishop(board, myPosition, pieceColor);
+        } else if (pieceType == PieceType.KING) {
+            moves = ChessPieceCalculator.King(board, myPosition, pieceColor);
         }
 
         return moves;

@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -44,6 +45,26 @@ public class ChessPiece {
         return pieceType;
     }
 
+    @Override
+    public String toString() {
+        return "ChessPiece{" +
+                "pieceColor=" + pieceColor +
+                ", pieceType=" + pieceType +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ChessPiece that)) return false;
+        return pieceColor == that.pieceColor && pieceType == that.pieceType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceColor, pieceType);
+    }
+
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
@@ -61,6 +82,15 @@ public class ChessPiece {
             moves = ChessPieceCalculator.King(board, myPosition, pieceColor);
         } else if (pieceType == PieceType.KNIGHT) {
             moves = ChessPieceCalculator.Knight(board, myPosition, pieceColor);
+        } else if (pieceType == PieceType.PAWN) {
+            moves = ChessPieceCalculator.Pawn(board, myPosition, pieceColor);
+        } else if (pieceType == PieceType.QUEEN) {
+            // Queen is a combination of rook and bishop
+            moves.addAll(ChessPieceCalculator.Bishop(board, myPosition, pieceColor));
+            moves.addAll(ChessPieceCalculator.Rook(board, myPosition, pieceColor));
+        } else if (pieceType == PieceType.ROOK) {
+            moves = ChessPieceCalculator.Rook(board, myPosition, pieceColor);
+
         }
 
         return moves;

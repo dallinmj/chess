@@ -46,6 +46,13 @@ public class ChessMove {
         return endPosition;
     }
 
+    @Override
+    public String toString() {
+        return startPosition.toString() +
+                endPosition.toString() +
+                promotionPiece;
+    }
+
     /**
      * Gets the type of piece to promote a pawn to if pawn promotion is part of this
      * chess move

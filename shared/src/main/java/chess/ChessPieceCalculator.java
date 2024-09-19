@@ -14,6 +14,12 @@ public class ChessPieceCalculator {
     public static Collection<ChessMove> Knight(ChessBoard board, ChessPosition position, ChessGame.TeamColor teamColor) {
         return KnightCalculator.potentialMoves(board, position, teamColor);
     }
+    public static Collection<ChessMove> Pawn(ChessBoard board, ChessPosition position, ChessGame.TeamColor teamColor) {
+        return PawnCalculator.potentialMoves(board, position, teamColor);
+    }
+    public static Collection<ChessMove> Rook(ChessBoard board, ChessPosition position, ChessGame.TeamColor teamColor) {
+        return RookCalculator.potentialMoves(board, position, teamColor);
+    }
     /*
     Check to see if there is a piece on the potential move
      */

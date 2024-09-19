@@ -16,14 +16,13 @@ public class PawnCalculator {
 
         ChessMove move;
         ChessPosition originalPosition = new ChessPosition(y, x);
-        boolean promotion = false;
 
         // Forward
         if ((y + 1 <= 8 && teamColor == ChessGame.TeamColor.WHITE) || (y - 1 > 0 && teamColor == ChessGame.TeamColor.BLACK)) {
             int upOrDown = teamColor == ChessGame.TeamColor.WHITE ? 1 : -1;
             move = new ChessMove(originalPosition, new ChessPosition(y + upOrDown, x), null);
             String checkPiece = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y + upOrDown, x), teamColor);
-            if (checkPiece.equals("empty") || checkPiece.equals("enemy")) {
+            if (checkPiece.equals("empty")) {
                 if (y + upOrDown == 8 || y + upOrDown == 1){
                     for (ChessPiece.PieceType type : ChessPiece.PieceType.values()) {
                         if (type == ChessPiece.PieceType.PAWN || type == ChessPiece.PieceType.KING){
@@ -43,7 +42,7 @@ public class PawnCalculator {
             move = new ChessMove(originalPosition, new ChessPosition(y + upOrDown, x), null);
             String checkPieceClose = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y + (upOrDown / 2), x), teamColor);
             String checkPieceFar = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y + upOrDown, x), teamColor);
-            if (checkPieceClose.equals("empty") && (checkPieceFar.equals("empty") || checkPieceFar.equals("enemy"))) {
+            if (checkPieceClose.equals("empty") && (checkPieceFar.equals("empty"))) {
                 validMoves.add(move);
             }
         }

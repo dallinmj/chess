@@ -8,16 +8,22 @@ import java.util.Objects;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessMove {
-    private final ChessPosition startPosition;
-    private final ChessPosition endPosition;
-    private final ChessPiece.PieceType promotionPiece;
+public record ChessMove(ChessPosition startPosition, ChessPosition endPosition, ChessPiece.PieceType promotionPiece) {
+
+    @Override
+    public String toString() {
+        return "{" +
+                "start=" + startPosition +
+                ", end=" + endPosition +
+                ", " + promotionPiece +
+                '}';
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ChessMove chessMove)) return false;
-        return Objects.equals(startPosition, chessMove.startPosition) && Objects.equals(endPosition, chessMove.endPosition) && promotionPiece == chessMove.promotionPiece;
+        return Objects.equals(endPosition, chessMove.endPosition) && Objects.equals(startPosition, chessMove.startPosition) && promotionPiece == chessMove.promotionPiece;
     }
 
     @Override
@@ -25,32 +31,20 @@ public class ChessMove {
         return Objects.hash(startPosition, endPosition, promotionPiece);
     }
 
-    public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
-                     ChessPiece.PieceType promotionPiece) {
-        this.startPosition = startPosition;
-        this.endPosition = endPosition;
-        this.promotionPiece = promotionPiece;
-    }
-
     /**
      * @return ChessPosition of starting location
      */
-    public ChessPosition getStartPosition() {
+    @Override
+    public ChessPosition startPosition() {
         return startPosition;
     }
 
     /**
      * @return ChessPosition of ending location
      */
-    public ChessPosition getEndPosition() {
-        return endPosition;
-    }
-
     @Override
-    public String toString() {
-        return startPosition.toString() +
-                endPosition.toString() +
-                promotionPiece;
+    public ChessPosition endPosition() {
+        return endPosition;
     }
 
     /**
@@ -59,7 +53,8 @@ public class ChessMove {
      *
      * @return Type of piece to promote a pawn to, or null if no promotion
      */
-    public ChessPiece.PieceType getPromotionPiece() {
+    @Override
+    public ChessPiece.PieceType promotionPiece() {
         return promotionPiece;
     }
 }

@@ -3,91 +3,107 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collection;
 
-/*
-Calculate the potential moves for the Bishop piece depending on its position and other pieces
- */
 public class PawnCalculator {
 
-    public static Collection<ChessMove> potentialMoves(ChessBoard board, ChessPosition position, ChessGame.TeamColor teamColor) {
-        //Import needed info (Location, board, teamColor)
-        Collection<ChessMove> validMoves = new ArrayList<>();
+    public static Collection<ChessMove> potentialMoves(ChessBoard board, ChessPosition position, ChessPiece piece){
+        Collection<ChessMove> moves = new ArrayList<>();
+        int upOrDown;
         int x = position.getColumn();
         int y = position.getRow();
+        boolean doubleMove = false;
 
-        ChessMove move;
-        ChessPosition originalPosition = new ChessPosition(y, x);
+        ChessGame.TeamColor team = piece.getTeamColor();
+        if (team == ChessGame.TeamColor.WHITE){
+            upOrDown = 1;
+            if (y == 2){
+                doubleMove = true;
+            }
+        } else{
+            upOrDown = -1;
+            if (y == 7){
+                doubleMove = true;
+            }
+        }
 
-        // Forward
-        if ((y + 1 <= 8 && teamColor == ChessGame.TeamColor.WHITE) || (y - 1 > 0 && teamColor == ChessGame.TeamColor.BLACK)) {
-            int upOrDown = teamColor == ChessGame.TeamColor.WHITE ? 1 : -1;
-            move = new ChessMove(originalPosition, new ChessPosition(y + upOrDown, x), null);
-            String checkPiece = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y + upOrDown, x), teamColor);
-            if (checkPiece.equals("empty")) {
-                if (y + upOrDown == 8 || y + upOrDown == 1){
-                    for (ChessPiece.PieceType type : ChessPiece.PieceType.values()) {
-                        if (type == ChessPiece.PieceType.PAWN || type == ChessPiece.PieceType.KING){
+        // Up
+        ChessPosition newPosition = new ChessPosition(y + upOrDown, x);
+        int newX = newPosition.getColumn();
+        int newY = newPosition.getRow();
+        if (newY <= 8 && newY >= 1 && newX <= 8 && newX >= 1){
+            ChessMove move = new ChessMove(position, newPosition, null);
+            String check = PieceCalculator.checkMove(board, newPosition, piece);
+            if (check.equals("empty")){
+                if (newY == 1 || newY == 8){
+                    for (ChessPiece.PieceType type : ChessPiece.PieceType.values()){
+                        if (type == ChessPiece.PieceType.KING || type == ChessPiece.PieceType.PAWN){
                             continue;
                         }
-                        move = new ChessMove(originalPosition, new ChessPosition(y + upOrDown, x), type);
-                        validMoves.add(move); // Promotion
+                        move = new ChessMove(position, newPosition, type);
+                        moves.add(move);
                     }
                 } else {
-                    validMoves.add(move);
+                    moves.add(move);
                 }
             }
         }
-        // Double Forward
-        if ((y == 2 && teamColor == ChessGame.TeamColor.WHITE) || (y == 7 && teamColor == ChessGame.TeamColor.BLACK)){
-            int upOrDown = teamColor == ChessGame.TeamColor.WHITE ? 2 : -2;
-            move = new ChessMove(originalPosition, new ChessPosition(y + upOrDown, x), null);
-            String checkPieceClose = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y + (upOrDown / 2), x), teamColor);
-            String checkPieceFar = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y + upOrDown, x), teamColor);
-            if (checkPieceClose.equals("empty") && (checkPieceFar.equals("empty"))) {
-                validMoves.add(move);
+        // Up x2
+        newPosition = new ChessPosition(y + (upOrDown * 2), x);
+        newX = newPosition.getColumn();
+        newY = newPosition.getRow();
+        if (newY <= 8 && newY >= 1 && newX <= 8 && newX >= 1 && doubleMove){
+            ChessMove move = new ChessMove(position, newPosition, null);
+            ChessPosition closePosition = new ChessPosition(y + upOrDown, x);
+            String check = PieceCalculator.checkMove(board, newPosition, piece);
+            String checkClose = PieceCalculator.checkMove(board, closePosition, piece);
+            if (check.equals("empty")){
+                if (checkClose.equals("empty")){
+                    moves.add(move);
+                }
             }
         }
-
-        // Diagonal Left
-        if ((y + 1 <= 8 && x - 1 > 0 && teamColor == ChessGame.TeamColor.WHITE) || (y - 1 > 0 && x - 1 > 0 && teamColor == ChessGame.TeamColor.BLACK)) {
-            int upOrDown = teamColor == ChessGame.TeamColor.WHITE ? 1 : -1;
-            move = new ChessMove(originalPosition, new ChessPosition(y + upOrDown, x - 1), null);
-            String checkPiece = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y + upOrDown, x - 1), teamColor);
-            if (checkPiece.equals("enemy")) {
-                if (y + upOrDown == 8 || y + upOrDown == 1) {
-                    for (ChessPiece.PieceType type : ChessPiece.PieceType.values()) {
-                        if (type == ChessPiece.PieceType.PAWN || type == ChessPiece.PieceType.KING){ {
+        // Up Right
+        newPosition = new ChessPosition(y + upOrDown, x - upOrDown);
+        newX = newPosition.getColumn();
+        newY = newPosition.getRow();
+        if (newY <= 8 && newY >= 1 && newX <= 8 && newX >= 1){
+            ChessMove move = new ChessMove(position, newPosition, null);
+            String check = PieceCalculator.checkMove(board, newPosition, piece);
+            if (check.equals("enemy")){
+                if (newY == 1 || newY == 8){
+                    for (ChessPiece.PieceType type : ChessPiece.PieceType.values()){
+                        if (type == ChessPiece.PieceType.KING || type == ChessPiece.PieceType.PAWN){
                             continue;
                         }
-                    }
-                        move = new ChessMove(originalPosition, new ChessPosition(y + upOrDown, x - 1), type);
-                        validMoves.add(move); // Promotion
+                        move = new ChessMove(position, newPosition, type);
+                        moves.add(move);
                     }
                 } else {
-                    validMoves.add(move);
+                    moves.add(move);
+                }
+            }
+        }
+        // Up Left
+        newPosition = new ChessPosition(y + upOrDown, x + upOrDown);
+        newX = newPosition.getColumn();
+        newY = newPosition.getRow();
+        if (newY <= 8 && newY >= 1 && newX <= 8 && newX >= 1){
+            ChessMove move = new ChessMove(position, newPosition, null);
+            String check = PieceCalculator.checkMove(board, newPosition, piece);
+            if (check.equals("enemy")){
+                if (newY == 1 || newY == 8){
+                    for (ChessPiece.PieceType type : ChessPiece.PieceType.values()){
+                        if (type == ChessPiece.PieceType.KING || type == ChessPiece.PieceType.PAWN){
+                            continue;
+                        }
+                        move = new ChessMove(position, newPosition, type);
+                        moves.add(move);
+                    }
+                } else {
+                    moves.add(move);
                 }
             }
         }
 
-        // Diagonal Right
-        if ((y + 1 <= 8 && x + 1 <= 8 && teamColor == ChessGame.TeamColor.WHITE) || (y - 1 > 0 && x + 1 <= 8 && teamColor == ChessGame.TeamColor.BLACK)) {
-            int upOrDown = teamColor == ChessGame.TeamColor.WHITE ? 1 : -1;
-            move = new ChessMove(originalPosition, new ChessPosition(y + upOrDown, x + 1), null);
-            String checkPiece = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y + upOrDown, x + 1), teamColor);
-            if (checkPiece.equals("enemy")) {
-                if (y + upOrDown == 8 || y + upOrDown == 1) {
-                    for (ChessPiece.PieceType type : ChessPiece.PieceType.values()) {
-                        if (type == ChessPiece.PieceType.PAWN || type == ChessPiece.PieceType.KING){ {
-                            continue;
-                        }
-                    }
-                        move = new ChessMove(originalPosition, new ChessPosition(y + upOrDown, x + 1), type);
-                        validMoves.add(move); // Promotion
-                    }
-                } else {
-                    validMoves.add(move);
-                }
-            }
-        }
-        return validMoves;
+        return moves;
     }
 }

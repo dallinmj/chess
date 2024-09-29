@@ -3,91 +3,88 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collection;
 
-/*
-Calculate the potential moves for the Knight piece depending on its position and other pieces
- */
 public class KnightCalculator {
 
-    public static Collection<ChessMove> potentialMoves(ChessBoard board, ChessPosition position, ChessGame.TeamColor teamColor) {
-        //Import needed info (Location, board, teamColor)
-        Collection<ChessMove> validMoves = new ArrayList<>();
+    public static Collection<ChessMove> potentialMoves(ChessBoard board, ChessPosition position, ChessPiece piece){
+        Collection<ChessMove> moves = new ArrayList<>();
+
         int x = position.getColumn();
         int y = position.getRow();
 
-        ChessMove move;
-        ChessPosition originalPosition = new ChessPosition(y, x);
-
-        // Up & Right
-        if (x + 1 <= 8 && y + 2 <= 8) {
-            move = new ChessMove(originalPosition, new ChessPosition(y + 2, x + 1), null);
-            String checkPiece = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y + 2, x + 1), teamColor);
-            if (checkPiece.equals("empty") || checkPiece.equals("enemy")) {
-                validMoves.add(move);
+        // Up Right
+        if (y < 7 && x < 8){
+            ChessPosition newPosition = new ChessPosition(y + 2, x + 1);
+            ChessMove move = new ChessMove(position, newPosition, null);
+            String check = PieceCalculator.checkMove(board, newPosition, piece);
+            if (!check.equals("teammate")){
+                moves.add(move);
+            }
+        }
+        // Right Up
+        if (y < 8 && x < 7){
+            ChessPosition newPosition = new ChessPosition(y + 1, x + 2);
+            ChessMove move = new ChessMove(position, newPosition, null);
+            String check = PieceCalculator.checkMove(board, newPosition, piece);
+            if (!check.equals("teammate")){
+                moves.add(move);
+            }
+        }
+        // Right Down
+        if (y > 1 && x < 7){
+            ChessPosition newPosition = new ChessPosition(y - 1, x + 2);
+            ChessMove move = new ChessMove(position, newPosition, null);
+            String check = PieceCalculator.checkMove(board, newPosition, piece);
+            if (!check.equals("teammate")){
+                moves.add(move);
+            }
+        }
+        // Down Right
+        if (y > 2 && x < 8){
+            ChessPosition newPosition = new ChessPosition(y - 2, x + 1);
+            ChessMove move = new ChessMove(position, newPosition, null);
+            String check = PieceCalculator.checkMove(board, newPosition, piece);
+            if (!check.equals("teammate")){
+                moves.add(move);
+            }
+        }
+        // Down Left
+        if (y > 2 && x > 1){
+            ChessPosition newPosition = new ChessPosition(y - 2, x - 1);
+            ChessMove move = new ChessMove(position, newPosition, null);
+            String check = PieceCalculator.checkMove(board, newPosition, piece);
+            if (!check.equals("teammate")){
+                moves.add(move);
+            }
+        }
+        // Left Down
+        if (y > 1 && x > 2){
+            ChessPosition newPosition = new ChessPosition(y - 1, x - 2);
+            ChessMove move = new ChessMove(position, newPosition, null);
+            String check = PieceCalculator.checkMove(board, newPosition, piece);
+            if (!check.equals("teammate")){
+                moves.add(move);
+            }
+        }
+        // Left Up
+        if (y < 8 && x > 2){
+            ChessPosition newPosition = new ChessPosition(y + 1, x - 2);
+            ChessMove move = new ChessMove(position, newPosition, null);
+            String check = PieceCalculator.checkMove(board, newPosition, piece);
+            if (!check.equals("teammate")){
+                moves.add(move);
+            }
+        }
+        // Up Left
+        if (y < 7 && x > 1){
+            ChessPosition newPosition = new ChessPosition(y + 2, x - 1);
+            ChessMove move = new ChessMove(position, newPosition, null);
+            String check = PieceCalculator.checkMove(board, newPosition, piece);
+            if (!check.equals("teammate")){
+                moves.add(move);
             }
         }
 
-        // Right & Up
-        if (x + 2 <= 8 && y + 1 <= 8) {
-            move = new ChessMove(originalPosition, new ChessPosition(y + 1, x + 2), null);
-            String checkPiece = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y + 1, x + 2), teamColor);
-            if (checkPiece.equals("empty") || checkPiece.equals("enemy")) {
-                validMoves.add(move);
-            }
-        }
 
-        // Right & Down
-        if (x + 2 <= 8 && y - 1 > 0) {
-            move = new ChessMove(originalPosition, new ChessPosition(y - 1, x + 2), null);
-            String checkPiece = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y - 1, x + 2), teamColor);
-            if (checkPiece.equals("empty") || checkPiece.equals("enemy")) {
-                validMoves.add(move);
-            }
-        }
-
-        // Down & Right
-        if (x + 1 <= 8 && y - 2 > 0) {
-            move = new ChessMove(originalPosition, new ChessPosition(y - 2, x + 1), null);
-            String checkPiece = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y - 2, x + 1), teamColor);
-            if (checkPiece.equals("empty") || checkPiece.equals("enemy")) {
-                validMoves.add(move);
-            }
-        }
-
-        // Down & Left
-        if (x - 1 > 0 && y - 2 > 0) {
-            move = new ChessMove(originalPosition, new ChessPosition(y - 2, x - 1), null);
-            String checkPiece = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y - 2, x - 1), teamColor);
-            if (checkPiece.equals("empty") || checkPiece.equals("enemy")) {
-                validMoves.add(move);
-            }
-        }
-
-        // Left & Down
-        if (x - 2 > 0 && y - 1 > 0) {
-            move = new ChessMove(originalPosition, new ChessPosition(y - 1, x - 2), null);
-            String checkPiece = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y - 1, x - 2), teamColor);
-            if (checkPiece.equals("empty") || checkPiece.equals("enemy")) {
-                validMoves.add(move);
-            }
-        }
-
-        // Left & Up
-        if (x - 2 > 0 && y + 1 <= 8) {
-            move = new ChessMove(originalPosition, new ChessPosition(y + 1, x - 2), null);
-            String checkPiece = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y + 1, x - 2), teamColor);
-            if (checkPiece.equals("empty") || checkPiece.equals("enemy")) {
-                validMoves.add(move);
-            }
-        }
-
-        // Up & Left
-        if (x - 1 > 0 && y + 2 <= 8) {
-            move = new ChessMove(originalPosition, new ChessPosition(y + 2, x - 1), null);
-            String checkPiece = ChessPieceCalculator.checkForPiece(board, new ChessPosition(y + 2, x - 1), teamColor);
-            if (checkPiece.equals("empty") || checkPiece.equals("enemy")) {
-                validMoves.add(move);
-            }
-        }
-        return validMoves;
+        return moves;
     }
 }

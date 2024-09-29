@@ -11,12 +11,13 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessPiece {
+
     private final ChessGame.TeamColor pieceColor;
-    private final PieceType pieceType;
+    private final PieceType type;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
-        this.pieceType = type;
+        this.type = type;
     }
 
     /**
@@ -42,14 +43,14 @@ public class ChessPiece {
      * @return which type of chess piece this piece is
      */
     public PieceType getPieceType() {
-        return pieceType;
+        return type;
     }
 
     @Override
     public String toString() {
         return "ChessPiece{" +
                 "pieceColor=" + pieceColor +
-                ", pieceType=" + pieceType +
+                ", type=" + type +
                 '}';
     }
 
@@ -57,12 +58,12 @@ public class ChessPiece {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ChessPiece that)) return false;
-        return pieceColor == that.pieceColor && pieceType == that.pieceType;
+        return pieceColor == that.pieceColor && type == that.type;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pieceColor, pieceType);
+        return Objects.hash(pieceColor, type);
     }
 
     /**
@@ -73,26 +74,9 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        // Make variable with pieceType
-        PieceType pieceType = getPieceType();
-        Collection<ChessMove> moves = new ArrayList<>();
-        if (pieceType == PieceType.BISHOP) {
-            moves = ChessPieceCalculator.Bishop(board, myPosition, pieceColor);
-        } else if (pieceType == PieceType.KING) {
-            moves = ChessPieceCalculator.King(board, myPosition, pieceColor);
-        } else if (pieceType == PieceType.KNIGHT) {
-            moves = ChessPieceCalculator.Knight(board, myPosition, pieceColor);
-        } else if (pieceType == PieceType.PAWN) {
-            moves = ChessPieceCalculator.Pawn(board, myPosition, pieceColor);
-        } else if (pieceType == PieceType.QUEEN) {
-            // Queen is a combination of rook and bishop
-            moves.addAll(ChessPieceCalculator.Bishop(board, myPosition, pieceColor));
-            moves.addAll(ChessPieceCalculator.Rook(board, myPosition, pieceColor));
-        } else if (pieceType == PieceType.ROOK) {
-            moves = ChessPieceCalculator.Rook(board, myPosition, pieceColor);
-
-        }
-
+        Collection<ChessMove> moves;
+        ChessPiece piece = board.getPiece(myPosition);
+        moves = PieceCalculator.calculateMoves(board, myPosition, piece);
         return moves;
     }
 }

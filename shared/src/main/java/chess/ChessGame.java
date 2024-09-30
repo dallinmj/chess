@@ -51,21 +51,16 @@ public class ChessGame {
         // Get potential moves for the given piece
         ChessPiece piece = board.getPiece(startPosition);
         Collection<ChessMove> potentialMoves = piece.pieceMoves(board, startPosition);
-
         TeamColor teamColor = piece.getTeamColor();
 
-        // Filter out moves that would put/keep the team in check
+        // Filter out moves that would put the team in check
         Collection<ChessMove> validMoves = potentialMoves;
-
-        // Iterate through potential moves and remove those that would put/keep the team in check
+            // Iterate through potential moves and remove those that would put the team in check
         for (ChessMove move: potentialMoves) {
-            // Make the move
+            // Test the move, throw exception if invalid
             try {
                 makeMove(move, true);
             } catch (InvalidMoveException e) {
-                validMoves.remove(move);
-            }
-            if (isInCheck(teamColor)) {
                 validMoves.remove(move);
             }
         }
@@ -86,12 +81,12 @@ public class ChessGame {
 
         board.addPiece(move.endPosition(), piece);
         board.addPiece(move.startPosition(), null);
+
         if (isInCheck(piece.getTeamColor())) {
-            board = copy;
+            undoLastMove(move, replacedPiece);
             throw new InvalidMoveException();
         }
         if (testMove){
-            board = copy;
             undoLastMove(move, replacedPiece);
         }
     }
@@ -101,7 +96,7 @@ public class ChessGame {
      */
     public void undoLastMove(ChessMove move, ChessPiece replacedPiece) {
         board.addPiece(move.startPosition(), board.getPiece(move.endPosition()));
-
+        board.addPiece(move.endPosition(), replacedPiece);
     }
 
     /**

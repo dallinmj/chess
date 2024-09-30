@@ -83,18 +83,24 @@ public class ChessGame {
         board.addPiece(move.startPosition(), null);
 
         if (isInCheck(piece.getTeamColor())) {
-            undoLastMove(move, replacedPiece);
+            undoMove(move, replacedPiece);
             throw new InvalidMoveException();
         }
         if (testMove){
-            undoLastMove(move, replacedPiece);
+            undoMove(move, replacedPiece);
         }
+    }
+    /**
+     * Overload for makeMove for one parameter
+     */
+    public void makeMove(ChessMove move) throws InvalidMoveException {
+        makeMove(move, false);
     }
 
     /**
      * Undoes the last move made
      */
-    public void undoLastMove(ChessMove move, ChessPiece replacedPiece) {
+    public void undoMove(ChessMove move, ChessPiece replacedPiece) {
         board.addPiece(move.startPosition(), board.getPiece(move.endPosition()));
         board.addPiece(move.endPosition(), replacedPiece);
     }

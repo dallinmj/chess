@@ -10,6 +10,8 @@ import java.util.Collection;
  */
 public class ChessGame {
 
+    private ChessBoard board;
+
     public ChessGame() {
 
     }
@@ -46,7 +48,29 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        // Get potential moves for the given piece
+        ChessPiece piece = board.getPiece(startPosition);
+        Collection<ChessMove> potentialMoves = piece.pieceMoves(board, startPosition);
+
+        TeamColor teamColor = piece.getTeamColor();
+
+        // Filter out moves that would put/keep the team in check
+        Collection<ChessMove> validMoves = potentialMoves;
+
+        // Iterate through potential moves and remove those that would put/keep the team in check
+        for (ChessMove move: potentialMoves) {
+            // Make the move
+            try {
+                makeMove(move, true);
+            } catch (InvalidMoveException e) {
+                validMoves.remove(move);
+            }
+            if (isInCheck(teamColor)) {
+                validMoves.remove(move);
+            }
+        }
+
+        return validMoves;
     }
 
     /**
@@ -55,8 +79,29 @@ public class ChessGame {
      * @param move chess move to preform
      * @throws InvalidMoveException if move is invalid
      */
-    public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+    public void makeMove(ChessMove move, Boolean testMove) throws InvalidMoveException {
+        ChessBoard copy = board.deepCopy();
+        ChessPiece piece = board.getPiece(move.startPosition());
+        ChessPiece replacedPiece = board.getPiece(move.endPosition());
+
+        board.addPiece(move.endPosition(), piece);
+        board.addPiece(move.startPosition(), null);
+        if (isInCheck(piece.getTeamColor())) {
+            board = copy;
+            throw new InvalidMoveException();
+        }
+        if (testMove){
+            board = copy;
+            undoLastMove(move, replacedPiece);
+        }
+    }
+
+    /**
+     * Undoes the last move made
+     */
+    public void undoLastMove(ChessMove move, ChessPiece replacedPiece) {
+        board.addPiece(move.startPosition(), board.getPiece(move.endPosition()));
+
     }
 
     /**
@@ -96,7 +141,7 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-        throw new RuntimeException("Not implemented");
+        this.board = board;
     }
 
     /**

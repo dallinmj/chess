@@ -9,26 +9,11 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public record ChessMove(ChessPosition startPosition, ChessPosition endPosition, ChessPiece.PieceType promotionPiece) {
-
-    @Override
-    public String toString() {
-        return "{" +
-                "start=" + startPosition +
-                ", end=" + endPosition +
-                ", " + promotionPiece +
-                '}';
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ChessMove chessMove)) return false;
-        return Objects.equals(endPosition, chessMove.endPosition) && Objects.equals(startPosition, chessMove.startPosition) && promotionPiece == chessMove.promotionPiece;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(startPosition, endPosition, promotionPiece);
+        return Objects.equals(startPosition, chessMove.startPosition) && Objects.equals(endPosition, chessMove.endPosition) && promotionPiece == chessMove.promotionPiece;
     }
 
     /**
@@ -45,6 +30,13 @@ public record ChessMove(ChessPosition startPosition, ChessPosition endPosition, 
     @Override
     public ChessPosition endPosition() {
         return endPosition;
+    }
+
+    @Override
+    public String toString() {
+        return startPosition.toString() +
+                endPosition.toString() +
+                promotionPiece;
     }
 
     /**

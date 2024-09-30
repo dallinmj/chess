@@ -39,6 +39,13 @@ public class ChessBoard {
         return squares[position.getRow() - 1][position.getColumn() - 1];
     }
 
+    /**
+     * Creates a deep copy of the current board
+     */
+    public ChessBoard deepCopy() {
+        throw new RuntimeException("Not implemented");
+    }
+
     @Override
     public String toString() {
         return "ChessBoard{" +

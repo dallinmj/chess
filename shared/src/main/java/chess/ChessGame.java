@@ -2,7 +2,6 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -13,16 +12,18 @@ import java.util.Iterator;
 public class ChessGame {
 
     private ChessBoard board;
+    private TeamColor colorTurn;
 
     public ChessGame() {
-
+        this.board = new ChessBoard();
+        this.colorTurn = TeamColor.WHITE;
     }
 
     /**
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        throw new RuntimeException("Not implemented");
+        return colorTurn;
     }
 
     /**
@@ -31,7 +32,7 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
+        colorTurn = team;
     }
 
     /**
@@ -42,8 +43,6 @@ public class ChessGame {
         BLACK
     }
 
-//    Expected :[{row=5, col=6}{row=5, col=5}null, {row=5, col=6}{row=5, col=4}null, {row=5, col=6}{row=5, col=3}null, {row=5, col=6}{row=5, col=2}null, {row=5, col=6}{row=5, col=7}null]
-//    Actual   :[{row=5, col=6}{row=6, col=6}null, {row=5, col=6}{row=5, col=5}null, {row=5, col=6}{row=8, col=6}null, {row=5, col=6}{row=5, col=4}null, {row=5, col=6}{row=7, col=6}null, {row=5, col=6}{row=5, col=3}null, {row=5, col=6}{row=5, col=2}null, {row=5, col ...
     /**
      * Gets a valid moves for a piece at the given location
      *
@@ -80,6 +79,17 @@ public class ChessGame {
     public void makeMove(ChessMove move, Boolean testMove) throws InvalidMoveException {
         ChessPiece piece = board.getPiece(move.startPosition());
         ChessPiece replacedPiece = board.getPiece(move.endPosition());
+
+        boolean valid = false;
+        if (piece == null){ throw new InvalidMoveException(); }
+        for (ChessMove Move : piece.pieceMoves(board, move.startPosition())){
+            if (Move.equals(move)){ valid = true; break; }
+        }
+        if (!valid){ throw new InvalidMoveException(); }
+
+        if (move.promotionPiece() != null) {
+            piece = new ChessPiece(piece.getTeamColor(), move.promotionPiece());
+        }
 
         board.addPiece(move.endPosition(), piece);
         board.addPiece(move.startPosition(), null);
@@ -187,6 +197,6 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        throw new RuntimeException("Not implemented");
+        return board;
     }
 }

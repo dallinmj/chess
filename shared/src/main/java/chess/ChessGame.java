@@ -49,7 +49,7 @@ public class ChessGame {
      *
      * @param startPosition the piece to get valid moves for
      * @return Set of valid moves for requested piece, or null if no piece at
-     * startPosition
+     * getStartPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         // Get potential moves for the given piece
@@ -78,15 +78,15 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move, Boolean testMove) throws InvalidMoveException {
-        ChessPiece piece = board.getPiece(move.startPosition());
-        ChessPiece replacedPiece = board.getPiece(move.endPosition());
+        ChessPiece piece = board.getPiece(move.getStartPosition());
+        ChessPiece replacedPiece = board.getPiece(move.getEndPosition());
         boolean valid = false;
 
         // Piece doesn't exist at given location
         if (piece == null){ throw new InvalidMoveException(); }
 
         // Check if move is valid
-        for (ChessMove Move : piece.pieceMoves(board, move.startPosition())){
+        for (ChessMove Move : piece.pieceMoves(board, move.getStartPosition())){
             if (Move.equals(move)){ valid = true; break; }
         }
 
@@ -101,8 +101,8 @@ public class ChessGame {
         }
 
         // Makes the move
-        board.addPiece(move.endPosition(), piece);
-        board.addPiece(move.startPosition(), null);
+        board.addPiece(move.getEndPosition(), piece);
+        board.addPiece(move.getStartPosition(), null);
 
         // Sees if their king is in check
         if (isInCheck(piece.getTeamColor())) {
@@ -133,8 +133,8 @@ public class ChessGame {
      * Undoes the last move made
      */
     public void undoMove(ChessMove move, ChessPiece replacedPiece) {
-        board.addPiece(move.startPosition(), board.getPiece(move.endPosition()));
-        board.addPiece(move.endPosition(), replacedPiece);
+        board.addPiece(move.getStartPosition(), board.getPiece(move.getEndPosition()));
+        board.addPiece(move.getEndPosition(), replacedPiece);
     }
 
     /**
@@ -172,7 +172,7 @@ public class ChessGame {
 
         // Calculate if in check
         for (ChessMove move : enemyPotentialMoves){
-            if (move.endPosition().equals(kingPosition)) {
+            if (move.getEndPosition().equals(kingPosition)) {
                 inCheck = true;
                 break;
             }

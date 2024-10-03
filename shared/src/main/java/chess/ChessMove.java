@@ -8,34 +8,32 @@ import java.util.Objects;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public record ChessMove(ChessPosition startPosition, ChessPosition endPosition, ChessPiece.PieceType promotionPiece) {
+public record ChessMove(ChessPosition getStartPosition, ChessPosition getEndPosition, ChessPiece.PieceType promotionPiece) {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ChessMove chessMove)) return false;
-        return Objects.equals(startPosition, chessMove.startPosition) && Objects.equals(endPosition, chessMove.endPosition) && promotionPiece == chessMove.promotionPiece;
+        return Objects.equals(getStartPosition, chessMove.getStartPosition) && Objects.equals(getEndPosition, chessMove.getEndPosition) && promotionPiece == chessMove.promotionPiece;
     }
 
     /**
      * @return ChessPosition of starting location
      */
-    @Override
-    public ChessPosition startPosition() {
-        return startPosition;
+    public ChessPosition getStartPosition() {
+        return getStartPosition;
     }
 
     /**
      * @return ChessPosition of ending location
      */
-    @Override
-    public ChessPosition endPosition() {
-        return endPosition;
+    public ChessPosition getEndPosition() {
+        return getEndPosition;
     }
 
     @Override
     public String toString() {
-        return startPosition.toString() +
-                endPosition.toString() +
+        return getStartPosition.toString() +
+                getEndPosition.toString() +
                 promotionPiece;
     }
 

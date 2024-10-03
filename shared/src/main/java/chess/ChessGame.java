@@ -83,7 +83,6 @@ public class ChessGame {
         boolean valid = false;
 
         if (piece == null){ throw new InvalidMoveException(); }
-//        if (this.getTeamTurn() != piece.getTeamColor()) { throw new InvalidMoveException(); }
         for (ChessMove Move : piece.pieceMoves(board, move.startPosition())){
             if (Move.equals(move)){ valid = true; break; }
         }
@@ -102,6 +101,9 @@ public class ChessGame {
         }
         if (testMove){
             undoMove(move, replacedPiece);
+        } else if (this.getTeamTurn() != piece.getTeamColor()) {
+            undoMove(move, replacedPiece);
+            throw new InvalidMoveException();
         } else {
             if (this.getTeamTurn() == TeamColor.WHITE) {
                 this.setTeamTurn(TeamColor.BLACK);

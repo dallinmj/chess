@@ -82,19 +82,29 @@ public class ChessGame {
         ChessPiece replacedPiece = board.getPiece(move.endPosition());
         boolean valid = false;
 
+        // Piece doesn't exist at given location
         if (piece == null){ throw new InvalidMoveException(); }
+
+        // Check if move is valid
         for (ChessMove Move : piece.pieceMoves(board, move.startPosition())){
             if (Move.equals(move)){ valid = true; break; }
         }
-        if (!valid){ throw new InvalidMoveException(); }
 
+        // Not a valid move
+        if (!valid){
+            throw new InvalidMoveException();
+        }
+
+        // Changes promotion piece :)
         if (move.promotionPiece() != null) {
             piece = new ChessPiece(piece.getTeamColor(), move.promotionPiece());
         }
 
+        // Makes the move
         board.addPiece(move.endPosition(), piece);
         board.addPiece(move.startPosition(), null);
 
+        // Sees if their king is in check
         if (isInCheck(piece.getTeamColor())) {
             undoMove(move, replacedPiece);
             throw new InvalidMoveException();

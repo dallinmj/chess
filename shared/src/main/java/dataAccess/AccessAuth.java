@@ -1,5 +1,6 @@
 package dataAccess;
 
+import dataaccess.DataAccessException;
 import model.AuthData;
 
 public class AccessAuth {
@@ -8,11 +9,15 @@ public class AccessAuth {
 
     }
 
-    void getAuth(AuthData a) {
+    void getAuth(AuthData a) throws DataAccessException {
 
     }
 
-    void deleteAuth(AuthData a) {
+    void deleteAuth(AuthData a) throws DataAccessException {
+
+    }
+
+    void clearAllAuth() {
 
     }
 }

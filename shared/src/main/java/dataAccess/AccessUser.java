@@ -5,7 +5,7 @@ import model.UserData;
 
 public class AccessUser {
 
-    void createUser(UserData u) throws DataAccessException {
+    void createUser(UserData u) {
 
     }
 
@@ -14,6 +14,10 @@ public class AccessUser {
     }
 
     void deleteUser(UserData u) throws DataAccessException {
+
+    }
+
+    void clearAllUsers() throws DataAccessException {
 
     }
 }

@@ -1,6 +1,5 @@
 package dataAccess;
 
-import chess.ChessGame;
 import dataaccess.DataAccessException;
 import model.GameData;
 

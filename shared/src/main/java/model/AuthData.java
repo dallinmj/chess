@@ -1,7 +1,7 @@
 package model;
 
 public record AuthData(String authToken, String username) {
-    public Object getAuthToken() {
+    public String getAuthToken() {
         return authToken;
     }
 }

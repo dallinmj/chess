@@ -6,7 +6,7 @@ import model.AuthData;
 import java.util.ArrayList;
 
 public class MemoryAuthDAO implements AuthDAO {
-    private ArrayList<AuthData> auths = new ArrayList<>();
+    private final ArrayList<AuthData> auths = new ArrayList<>();
 
     @Override
     public void createAuth(AuthData a) throws DataAccessException {
@@ -15,22 +15,22 @@ public class MemoryAuthDAO implements AuthDAO {
 
     @Override
     public AuthData getAuth(String authToken) throws DataAccessException {
-//        for (AuthData a : auths) {
-//            if (a.getAuthToken().equals(authToken)) {
-//                return a;
-//            }
-//        }
-//        throw new DataAccessException("Auth not found");
-        return null;
+        for (AuthData a : auths) {
+            if (a.getAuthToken().equals(authToken)) {
+                return a;
+            }
+        }
+        throw new DataAccessException("Auth not found");
     }
 
     @Override
     public void deleteAuth(AuthData a) throws DataAccessException {
-
+        getAuth(a.authToken()); // throws exception if not found
+        auths.remove(a);
     }
 
     @Override
     public void clearAllAuth() throws DataAccessException {
-
+        auths.clear();
     }
 }

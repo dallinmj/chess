@@ -1,4 +1,4 @@
 package service.request_result;
 
-record ClearRequest() {
+public record ClearRequest() {
 }

@@ -1,4 +1,7 @@
 package service.request_result;
 
-record CreateGameResult(int gameID) {
+public record CreateGameResult(int gameID) {
+    public int gameId() {
+        return gameID;
+    }
 }

@@ -11,7 +11,7 @@ public interface GameDAO {
 
     ArrayList<GameData> listGames() throws DataAccessException;
 
-    void findGame() throws DataAccessException;
+    GameData getGame(int gameId) throws DataAccessException;
 
     String checkTeamColor(GameData g, String playerColor)  throws DataAccessException;
 

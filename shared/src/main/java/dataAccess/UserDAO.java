@@ -3,6 +3,8 @@ package dataAccess;
 import dataaccess.DataAccessException;
 import model.UserData;
 
+import java.util.ArrayList;
+
 public interface UserDAO {
 
     void createUser(UserData u) throws DataAccessException;
@@ -12,4 +14,6 @@ public interface UserDAO {
     void deleteUser(UserData u) throws DataAccessException;
 
     void clearAllUsers() throws DataAccessException;
+
+    ArrayList<UserData> listUsers() throws DataAccessException;
 }

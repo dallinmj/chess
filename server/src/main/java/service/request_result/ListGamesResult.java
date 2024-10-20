@@ -1,4 +1,4 @@
 package service.request_result;
 
-record ListGamesResult(Object[] games) {
+public record ListGamesResult(java.util.ArrayList<model.GameData> games) {
 }

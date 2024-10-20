@@ -1,4 +1,7 @@
 package service.request_result;
 
-record LogoutResult(String result){
+public record LogoutResult(String message){
+    public String message() {
+        return message;
+    }
 }

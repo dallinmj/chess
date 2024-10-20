@@ -20,7 +20,7 @@ public class MemoryAuthDAO implements AuthDAO {
                 return a;
             }
         }
-        throw new DataAccessException("Auth not found");
+        throw new DataAccessException("Error: unauthorized");
     }
 
     @Override
@@ -32,5 +32,16 @@ public class MemoryAuthDAO implements AuthDAO {
     @Override
     public void clearAllAuth() throws DataAccessException {
         auths.clear();
+    }
+
+    @Override
+    public ArrayList<AuthData> listAuths() throws DataAccessException {
+        return auths;
+    }
+
+    @Override
+    public String getUsername(String authToken) throws DataAccessException {
+        AuthData a = getAuth(authToken);
+        return a.getUsername();
     }
 }

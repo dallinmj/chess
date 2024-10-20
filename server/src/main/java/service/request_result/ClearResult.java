@@ -1,4 +1,4 @@
 package service.request_result;
 
-public record ClearResult() {
+public record ClearResult(String s) {
 }

@@ -32,4 +32,9 @@ public class MemoryUserDAO implements UserDAO {
     public void clearAllUsers() throws DataAccessException {
         users.clear();
     }
+
+    @Override
+    public ArrayList<UserData> listUsers() throws DataAccessException {
+        return users;
+    }
 }

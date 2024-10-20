@@ -1,5 +1,5 @@
 package service.request_result;
 
-record LoginResult(String username, String authToken) {
+public record LoginResult(String username, String authToken) {
 
 }

@@ -1,4 +1,4 @@
 package service.request_result;
 
-record ListGamesRequest(String authToken) {
+public record ListGamesRequest(String authToken) {
 }

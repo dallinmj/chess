@@ -1,4 +1,7 @@
 package service.request_result;
 
-record JoinGameResult(String result) {
+public record JoinGameResult(String result) {
+    public String message() {
+        return result;
+    }
 }

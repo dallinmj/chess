@@ -58,6 +58,6 @@ public class UserService {
         String authToken = request.authToken();
         AuthData authData = authDAO.getAuth(authToken);
         authDAO.deleteAuth(authData);
-        return new LogoutResult("");
+        return new LogoutResult();
     }
 }

@@ -13,12 +13,10 @@ import java.util.Random;
 public class GameService {
 
     private final AuthDAO authDAO;
-    private final UserDAO userDAO;
     private final GameDAO gameDAO;
 
     public GameService(AuthDAO authDAO, UserDAO userDAO, GameDAO gameDAO) {
         this.authDAO = authDAO;
-        this.userDAO = userDAO;
         this.gameDAO = gameDAO;
     }
 

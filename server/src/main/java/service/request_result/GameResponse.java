@@ -1,16 +1,22 @@
 package service.request_result;
 
-public class GameSummary {
+import model.GameData;
+
+public class GameResponse {
     private final int gameId;
     private final String whiteUsername;
     private final String blackUsername;
     private final String gameName;
 
-    public GameSummary(int gameId, String whiteUsername, String blackUsername, String gameName) {
-        this.gameId = gameId;
-        this.whiteUsername = whiteUsername;
-        this.blackUsername = blackUsername;
-        this.gameName = gameName;
+    public GameResponse(GameData gameData) {
+        this.gameId = gameData.getGameID();
+        this.whiteUsername = gameData.getWhiteUsername();
+        this.blackUsername = gameData.getBlackUsername();
+        this.gameName = gameData.getGameName();
+    }
+
+    public int getGameId() {
+        return gameId;
     }
 
     public String getWhiteUsername() {
@@ -24,9 +30,4 @@ public class GameSummary {
     public String getGameName() {
         return gameName;
     }
-
-    public int getGameId() {
-        return gameId;
-    }
-
 }

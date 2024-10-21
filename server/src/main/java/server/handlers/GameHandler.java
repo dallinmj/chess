@@ -1,13 +1,16 @@
 package server.handlers;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import dataaccess.DataAccessException;
 import service.GameService;
 import service.request_result.*;
 import spark.Request;
 import spark.Response;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class GameHandler {
     private final GameService gameService;
@@ -20,7 +23,7 @@ public class GameHandler {
     public String createGame(Request req, Response res) {
         try {
             String authToken = req.headers("authorization");
-            String gameName = req.body();
+            String gameName = gson.fromJson(req.body(), JsonObject.class).get("gameName").getAsString();
             CreateGameRequest createGameRequest = new CreateGameRequest(authToken, gameName);
 
             if (createGameRequest.gameName() == null) {
@@ -49,7 +52,13 @@ public class GameHandler {
             String authToken = req.headers("authorization");
             ListGamesRequest listGamesRequest = new ListGamesRequest(authToken);
             ListGamesResult listGamesResult = gameService.listGames(listGamesRequest);
-            return gson.toJson(listGamesResult);
+
+            // Map GameData to GameResponse
+            List<GameResponse> gameResponses = listGamesResult.games().stream()
+                    .map(GameResponse::new)
+                    .collect(Collectors.toList());
+
+            return gson.toJson(new GamesResponse(gameResponses));
         } catch(DataAccessException e) {
             res.status(401);
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());

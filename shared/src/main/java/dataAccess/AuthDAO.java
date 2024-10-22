@@ -1,9 +1,7 @@
 package dataAccess;
 
-import dataaccess.DataAccessException;
 import model.AuthData;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public interface AuthDAO {

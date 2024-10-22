@@ -1,6 +1,5 @@
 package dataAccess;
 
-import dataaccess.DataAccessException;
 import model.GameData;
 
 import java.util.ArrayList;

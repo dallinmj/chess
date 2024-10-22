@@ -1,6 +1,5 @@
 package dataAccess;
 
-import dataaccess.DataAccessException;
 import model.AuthData;
 
 import java.util.ArrayList;
@@ -9,7 +8,7 @@ public class MemoryAuthDAO implements AuthDAO {
     private final ArrayList<AuthData> auths = new ArrayList<>();
 
     @Override
-    public void createAuth(AuthData a) throws DataAccessException {
+    public void createAuth(AuthData a) {
         auths.add(a);
     }
 
@@ -30,12 +29,12 @@ public class MemoryAuthDAO implements AuthDAO {
     }
 
     @Override
-    public void clearAllAuth() throws DataAccessException {
+    public void clearAllAuth() {
         auths.clear();
     }
 
     @Override
-    public ArrayList<AuthData> listAuths() throws DataAccessException {
+    public ArrayList<AuthData> listAuths() {
         return auths;
     }
 

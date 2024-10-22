@@ -3,7 +3,7 @@ package service;
 import dataAccess.AuthDAO;
 import dataAccess.GameDAO;
 import dataAccess.UserDAO;
-import dataaccess.DataAccessException;
+import dataAccess.DataAccessException;
 import service.request_result.ClearRequest;
 import service.request_result.ClearResult;
 

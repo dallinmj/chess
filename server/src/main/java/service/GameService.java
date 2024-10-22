@@ -3,7 +3,7 @@ package service;
 import chess.ChessGame;
 import dataAccess.AuthDAO;
 import dataAccess.GameDAO;
-import dataaccess.DataAccessException;
+import dataAccess.DataAccessException;
 import model.GameData;
 import service.request_result.*;
 

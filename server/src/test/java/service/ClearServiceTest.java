@@ -2,11 +2,10 @@ package service;
 
 import chess.ChessGame;
 import dataAccess.*;
-import dataaccess.DataAccessException;
+import dataAccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.request_result.ClearRequest;
 import service.request_result.ClearResult;

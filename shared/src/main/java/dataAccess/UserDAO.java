@@ -1,6 +1,5 @@
 package dataAccess;
 
-import dataaccess.DataAccessException;
 import model.UserData;
 
 import java.util.ArrayList;

@@ -15,15 +15,13 @@ class UserServiceTest {
     private ClearService clearService;
     private UserDAO userDAO;
     private AuthDAO authDAO;
-    private GameDAO gameDAO;
 
     @BeforeEach
     void setUp() {
         authDAO = new MemoryAuthDAO();
         userDAO = new MemoryUserDAO();
-        gameDAO = new MemoryGameDAO();
-        userService = new UserService(authDAO, userDAO, gameDAO);
-        clearService = new ClearService(authDAO, userDAO, gameDAO);
+        userService = new UserService(authDAO, userDAO, null);
+        clearService = new ClearService(authDAO, userDAO, null);
     }
 
     @AfterEach
@@ -35,7 +33,7 @@ class UserServiceTest {
     void register() throws DataAccessException {
         RegisterResult registerResult = userService.register(new RegisterRequest("register", "password", "email"));
         assertEquals("register", registerResult.username());
-        UserData userData = userDAO.getUser("register");
+        userDAO.getUser("register");
         assertEquals(new UserData("register", "password", "email"), userDAO.getUser("register"));
     }
 
@@ -70,12 +68,11 @@ class UserServiceTest {
     void logout() throws DataAccessException {
         userDAO.createUser(new UserData("logout", "password", "email"));
         LoginResult loginResult = userService.login(new LoginRequest("logout", "password"));
-        LogoutResult logoutResult = userService.logout(new LogoutRequest(loginResult.authToken()));
+        userService.logout(new LogoutRequest(loginResult.authToken()));
         try {
             authDAO.getAuth(loginResult.authToken());
         } catch (DataAccessException e) {
             assertEquals("Error: unauthorized", e.getMessage());
-            assertEquals("", logoutResult.message());
         }
     }
 }

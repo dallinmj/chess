@@ -74,8 +74,14 @@ public class GameHandler {
         try {
             String authToken = req.headers("authorization");
             JsonObject requestBody = gson.fromJson(req.body(), JsonObject.class);
-            String color = requestBody.get("playerColor").getAsString();
-            int gameID = requestBody.get("gameID").getAsInt();
+            String color;
+            int gameID;
+            try {
+                color = requestBody.get("playerColor").getAsString();
+                gameID = requestBody.get("gameID").getAsInt();
+            } catch (Exception e) {
+                throw new DataAccessException("Error: bad request");
+            }
             JoinGameRequest joinGameRequest = new JoinGameRequest(authToken, color, gameID);
             JoinGameResult joinGameResult = gameService.joinGame(joinGameRequest);
             return gson.toJson(joinGameResult);

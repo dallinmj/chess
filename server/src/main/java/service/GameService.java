@@ -3,7 +3,6 @@ package service;
 import chess.ChessGame;
 import dataAccess.AuthDAO;
 import dataAccess.GameDAO;
-import dataAccess.UserDAO;
 import dataaccess.DataAccessException;
 import model.GameData;
 import service.request_result.*;
@@ -15,7 +14,7 @@ public class GameService {
     private final AuthDAO authDAO;
     private final GameDAO gameDAO;
 
-    public GameService(AuthDAO authDAO, UserDAO userDAO, GameDAO gameDAO) {
+    public GameService(AuthDAO authDAO, GameDAO gameDAO) {
         this.authDAO = authDAO;
         this.gameDAO = gameDAO;
     }
@@ -27,16 +26,16 @@ public class GameService {
 
     public CreateGameResult createGame(CreateGameRequest createGameRequest) throws DataAccessException {
         authDAO.getAuth(createGameRequest.authToken());
-        int gameId = new Random().nextInt(1000);
-        gameDAO.createGame(new GameData(gameId, null, null,
+        int gameID = new Random().nextInt(1000);
+        gameDAO.createGame(new GameData(gameID, null, null,
                 createGameRequest.gameName(), new ChessGame()));
-        return new CreateGameResult(gameId);
+        return new CreateGameResult(gameID);
     }
 
     public JoinGameResult joinGame(JoinGameRequest joinGameRequest) throws DataAccessException {
         authDAO.getAuth(joinGameRequest.authToken());
         String username = authDAO.getUsername(joinGameRequest.authToken());
-        GameData gameData = gameDAO.getGame(joinGameRequest.gameId());
+        GameData gameData = gameDAO.getGame(joinGameRequest.gameID());
         String player = gameDAO.checkTeamColor(gameData, joinGameRequest.color());
         if (player == null) {
             gameDAO.addPlayer(gameData, joinGameRequest.color(), username);

@@ -16,14 +16,14 @@ public class MemoryGameDAO implements GameDAO {
     }
 
     @Override
-    public ArrayList<GameData> listGames() throws DataAccessException {
+    public ArrayList<GameData> listGames() {
         return games;
     }
 
     @Override
-    public GameData getGame(int gameId) throws DataAccessException {
+    public GameData getGame(int gameID) throws DataAccessException {
         for (GameData g : games) {
-            if (g.getGameID() == gameId) {
+            if (g.getGameID() == gameID) {
                 return g;
             }
         }
@@ -55,12 +55,12 @@ public class MemoryGameDAO implements GameDAO {
     }
 
     @Override
-    public void deleteGame(GameData g) throws DataAccessException {
+    public void deleteGame(GameData g) {
 
     }
 
     @Override
-    public void clearAllGames() throws DataAccessException {
+    public void clearAllGames() {
         games.clear();
     }
 }

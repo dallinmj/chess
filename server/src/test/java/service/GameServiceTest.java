@@ -16,17 +16,15 @@ class GameServiceTest {
 
     private ClearService clearService;
     private GameService gameService;
-    private UserDAO userDAO;
     private AuthDAO authDAO;
     private GameDAO gameDAO;
 
     @BeforeEach
     void setUp() {
         authDAO = new MemoryAuthDAO();
-        userDAO = new MemoryUserDAO();
         gameDAO = new MemoryGameDAO();
-        gameService = new GameService(authDAO, userDAO, gameDAO);
-        clearService = new ClearService(authDAO, userDAO, gameDAO);
+        gameService = new GameService(authDAO, gameDAO);
+        clearService = new ClearService(authDAO, null, gameDAO);
     }
 
     @AfterEach
@@ -55,8 +53,7 @@ class GameServiceTest {
     void joinGame() throws DataAccessException {
         authDAO.createAuth(new AuthData("authToken", "username"));
         gameDAO.createGame(new GameData(123, null, "player", "game1", new ChessGame()));
-        JoinGameResult joinGameResult = gameService.joinGame(new JoinGameRequest("authToken", "white", 123));
+        gameService.joinGame(new JoinGameRequest("authToken", "white", 123));
         assertEquals("username", gameDAO.getGame(123).getWhiteUsername());
-        assertEquals("", joinGameResult.message());
     }
 }

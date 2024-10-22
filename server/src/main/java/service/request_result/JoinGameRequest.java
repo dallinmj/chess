@@ -9,7 +9,7 @@ public record JoinGameRequest(String authToken, String color, int gameID) {
         return color;
     }
 
-    public int gameId() {
+    public int gameID() {
         return gameID;
     }
 }

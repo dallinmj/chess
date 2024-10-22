@@ -24,9 +24,9 @@ public class ClearService {
             authDAO.clearAllAuth();
             userDAO.clearAllUsers();
             gameDAO.clearAllGames();
-            return new ClearResult("");
+            return new ClearResult();
         } catch (DataAccessException e) {
-            return new ClearResult(e.getMessage());
+            return new ClearResult();
         }
     }
 }

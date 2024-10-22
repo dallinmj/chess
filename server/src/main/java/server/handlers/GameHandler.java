@@ -69,4 +69,30 @@ public class GameHandler {
             return gson.toJson(errorResponse);
         }
     }
+
+    public String joinGame(Request req, Response res) {
+        try {
+            String authToken = req.headers("authorization");
+            JsonObject requestBody = gson.fromJson(req.body(), JsonObject.class);
+            String color = requestBody.get("playerColor").getAsString();
+            int gameID = requestBody.get("gameID").getAsInt();
+            JoinGameRequest joinGameRequest = new JoinGameRequest(authToken, color, gameID);
+            JoinGameResult joinGameResult = gameService.joinGame(joinGameRequest);
+            return gson.toJson(joinGameResult);
+        } catch(DataAccessException e) {
+            if (Objects.equals(e.getMessage(), "Error: bad request")) {
+                res.status(400);
+            } else if (Objects.equals(e.getMessage(), "Error: unauthorized")) {
+                res.status(401);
+            } else if (Objects.equals(e.getMessage(), "Error: already taken")) {
+                res.status(403);
+            }
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return gson.toJson(errorResponse);
+        } catch(Exception e){
+            res.status(500);
+            ErrorResponse errorResponse = new ErrorResponse("Error: " + e.getMessage());
+            return gson.toJson(errorResponse);
+        }
+    }
 }

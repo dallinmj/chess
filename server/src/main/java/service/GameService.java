@@ -40,7 +40,7 @@ public class GameService {
         String player = gameDAO.checkTeamColor(gameData, joinGameRequest.color());
         if (player == null) {
             gameDAO.addPlayer(gameData, joinGameRequest.color(), username);
-            return new JoinGameResult("");
+            return new JoinGameResult();
         }
         throw new DataAccessException("Error: already taken");
     }

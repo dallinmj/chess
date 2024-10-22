@@ -1,4 +1,4 @@
-package dataAccess;
+package dataaccess;
 
 import model.UserData;
 
@@ -20,11 +20,6 @@ public class MemoryUserDAO implements UserDAO {
             }
         }
         throw new DataAccessException("User not found");
-    }
-
-    @Override
-    public void deleteUser(UserData u) throws DataAccessException {
-        users.remove(u);
     }
 
     @Override

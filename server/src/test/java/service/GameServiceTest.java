@@ -1,14 +1,15 @@
 package service;
 
 import chess.ChessGame;
-import dataAccess.*;
-import dataAccess.DataAccessException;
+import dataaccess.*;
+import dataaccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import service.request_result.*;
+import service.requestresult.*;
+import service.requestresult.gamerequestresult.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,13 +19,15 @@ class GameServiceTest {
     private GameService gameService;
     private AuthDAO authDAO;
     private GameDAO gameDAO;
+    private UserDAO userDAO;
 
     @BeforeEach
     void setUp() {
         authDAO = new MemoryAuthDAO();
         gameDAO = new MemoryGameDAO();
+        userDAO = new MemoryUserDAO();
         gameService = new GameService(authDAO, gameDAO);
-        clearService = new ClearService(authDAO, null, gameDAO);
+        clearService = new ClearService(authDAO, userDAO, gameDAO);
     }
 
     @AfterEach
@@ -35,8 +38,10 @@ class GameServiceTest {
     @Test
     void listGames() throws DataAccessException {
         authDAO.createAuth(new AuthData("authToken", "username"));
-        gameDAO.createGame(new GameData(123, "player1", "player2", "game1", new ChessGame()));
-        gameDAO.createGame(new GameData(456, "player3", "player4", "game2", new ChessGame()));
+        gameDAO.createGame(new GameData(123, "player1",
+                "player2", "game1", new ChessGame()));
+        gameDAO.createGame(new GameData(456, "player3",
+                "player4", "game2", new ChessGame()));
         ListGamesResult listGamesResult = gameService.listGames(new ListGamesRequest("authToken"));
         assertEquals(2, listGamesResult.games().size());
     }

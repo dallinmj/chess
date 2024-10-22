@@ -2,9 +2,9 @@ package server.handlers;
 
 import com.google.gson.Gson;
 import service.ClearService;
-import service.request_result.ClearRequest;
-import service.request_result.ClearResult;
-import service.request_result.ErrorResponse;
+import service.requestresult.ClearRequest;
+import service.requestresult.ClearResult;
+import service.requestresult.ErrorResponse;
 import spark.Request;
 import spark.Response;
 

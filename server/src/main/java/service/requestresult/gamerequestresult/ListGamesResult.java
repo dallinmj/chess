@@ -1,4 +1,4 @@
-package service.request_result;
+package service.requestresult.gamerequestresult;
 
 import model.GameData;
 import java.util.List;

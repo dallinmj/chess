@@ -86,8 +86,8 @@ public class ChessGame {
         if (piece == null){ throw new InvalidMoveException(); }
 
         // Check if move is valid
-        for (ChessMove Move : piece.pieceMoves(board, move.getStartPosition())){
-            if (Move.equals(move)){ valid = true; break; }
+        for (ChessMove moveToCheck : piece.pieceMoves(board, move.getStartPosition())){
+            if (moveToCheck.equals(move)){ valid = true; break; }
         }
 
         // Not a valid move

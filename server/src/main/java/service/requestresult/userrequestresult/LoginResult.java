@@ -1,4 +1,4 @@
-package service.request_result;
+package service.requestresult.userrequestresult;
 
 public record LoginResult(String username, String authToken) {
 

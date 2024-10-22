@@ -1,9 +1,10 @@
 package server.handlers;
 
 import com.google.gson.Gson;
-import dataAccess.DataAccessException;
+import dataaccess.DataAccessException;
 import service.UserService;
-import service.request_result.*;
+import service.requestresult.*;
+import service.requestresult.userrequestresult.*;
 import spark.Request;
 import spark.Response;
 

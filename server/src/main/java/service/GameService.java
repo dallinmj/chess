@@ -1,11 +1,11 @@
 package service;
 
 import chess.ChessGame;
-import dataAccess.AuthDAO;
-import dataAccess.GameDAO;
-import dataAccess.DataAccessException;
+import dataaccess.AuthDAO;
+import dataaccess.GameDAO;
+import dataaccess.DataAccessException;
 import model.GameData;
-import service.request_result.*;
+import service.requestresult.gamerequestresult.*;
 
 import java.util.Random;
 

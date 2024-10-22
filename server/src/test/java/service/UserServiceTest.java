@@ -1,12 +1,13 @@
 package service;
 
-import dataAccess.*;
-import dataAccess.DataAccessException;
+import dataaccess.*;
+import dataaccess.DataAccessException;
 import model.UserData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import service.request_result.*;
+import service.requestresult.*;
+import service.requestresult.userrequestresult.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,13 +16,15 @@ class UserServiceTest {
     private ClearService clearService;
     private UserDAO userDAO;
     private AuthDAO authDAO;
+    private GameDAO gameDAO;
 
     @BeforeEach
     void setUp() {
         authDAO = new MemoryAuthDAO();
         userDAO = new MemoryUserDAO();
-        userService = new UserService(authDAO, userDAO, null);
-        clearService = new ClearService(authDAO, userDAO, null);
+        gameDAO = new MemoryGameDAO();
+        userService = new UserService(authDAO, userDAO, gameDAO);
+        clearService = new ClearService(authDAO, userDAO, gameDAO);
     }
 
     @AfterEach

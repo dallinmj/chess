@@ -1,12 +1,12 @@
 package service;
 
-import dataAccess.AuthDAO;
-import dataAccess.GameDAO;
-import dataAccess.UserDAO;
-import dataAccess.DataAccessException;
+import dataaccess.AuthDAO;
+import dataaccess.GameDAO;
+import dataaccess.UserDAO;
+import dataaccess.DataAccessException;
 import model.AuthData;
 import model.UserData;
-import service.request_result.*;
+import service.requestresult.userrequestresult.*;
 
 import java.util.Objects;
 import java.util.UUID;

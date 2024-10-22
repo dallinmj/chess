@@ -1,14 +1,14 @@
 package service;
 
 import chess.ChessGame;
-import dataAccess.*;
-import dataAccess.DataAccessException;
+import dataaccess.*;
+import dataaccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.Test;
-import service.request_result.ClearRequest;
-import service.request_result.ClearResult;
+import service.requestresult.ClearRequest;
+import service.requestresult.ClearResult;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

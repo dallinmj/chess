@@ -1,5 +1,5 @@
 // GamesResponse.java
-package service.request_result;
+package service.requestresult.gamerequestresult;
 
 import java.util.List;
 

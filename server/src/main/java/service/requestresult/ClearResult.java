@@ -1,4 +1,4 @@
-package service.request_result;
+package service.requestresult;
 
 public record ClearResult() {
 }

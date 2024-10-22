@@ -1,11 +1,11 @@
 package service;
 
-import dataAccess.AuthDAO;
-import dataAccess.GameDAO;
-import dataAccess.UserDAO;
-import dataAccess.DataAccessException;
-import service.request_result.ClearRequest;
-import service.request_result.ClearResult;
+import dataaccess.AuthDAO;
+import dataaccess.GameDAO;
+import dataaccess.UserDAO;
+import dataaccess.DataAccessException;
+import service.requestresult.ClearRequest;
+import service.requestresult.ClearResult;
 
 public class ClearService {
 

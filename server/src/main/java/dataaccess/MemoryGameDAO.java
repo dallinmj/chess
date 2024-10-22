@@ -1,4 +1,4 @@
-package dataAccess;
+package dataaccess;
 
 import model.GameData;
 
@@ -51,11 +51,6 @@ public class MemoryGameDAO implements GameDAO {
         }
         games.remove(g);
         games.add(updatedGame);
-    }
-
-    @Override
-    public void deleteGame(GameData g) {
-
     }
 
     @Override

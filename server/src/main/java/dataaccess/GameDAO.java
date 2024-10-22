@@ -1,4 +1,4 @@
-package dataAccess;
+package dataaccess;
 
 import model.GameData;
 
@@ -15,8 +15,6 @@ public interface GameDAO {
     String checkTeamColor(GameData g, String playerColor)  throws DataAccessException;
 
     void addPlayer(GameData g, String playerColor, String username) throws DataAccessException;
-
-    void deleteGame(GameData g) throws DataAccessException;
 
     void clearAllGames() throws DataAccessException;
 }

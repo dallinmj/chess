@@ -60,8 +60,8 @@ public class ChessBoard {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ChessBoard that)) return false;
+        if (this == o) {return true;}
+        if (!(o instanceof ChessBoard that)) {return false;}
         return Objects.deepEquals(squares, that.squares);
     }
 
@@ -75,7 +75,9 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        List<ChessPiece.PieceType> types = new ArrayList<>(List.of(ChessPiece.PieceType.ROOK, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.KING, ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK));
+        List<ChessPiece.PieceType> types = new ArrayList<>(List.of(ChessPiece.PieceType.ROOK,
+                ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.QUEEN,
+                ChessPiece.PieceType.KING, ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK));
         for (int i = 1; i <= 8; i++){
             this.addPiece(new ChessPosition(1, i), new ChessPiece(ChessGame.TeamColor.WHITE, types.get(i - 1)));
         }

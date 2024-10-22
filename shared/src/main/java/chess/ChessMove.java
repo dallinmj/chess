@@ -11,9 +11,11 @@ import java.util.Objects;
 public record ChessMove(ChessPosition getStartPosition, ChessPosition getEndPosition, ChessPiece.PieceType promotionPiece) {
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ChessMove chessMove)) return false;
-        return Objects.equals(getStartPosition, chessMove.getStartPosition) && Objects.equals(getEndPosition, chessMove.getEndPosition) && promotionPiece == chessMove.promotionPiece;
+        if (this == o) {return true;}
+        if (!(o instanceof ChessMove chessMove)) {return false;}
+        return Objects.equals(getStartPosition, chessMove.getStartPosition) &&
+                Objects.equals(getEndPosition, chessMove.getEndPosition) &&
+                promotionPiece == chessMove.promotionPiece;
     }
 
     /**

@@ -24,7 +24,6 @@ public class PawnCalculator {
                 doubleMove = true;
             }
         }
-
         // Up
         ChessPosition newPosition = new ChessPosition(y + upOrDown, x);
         int newX = newPosition.getColumn();
@@ -103,7 +102,6 @@ public class PawnCalculator {
                 }
             }
         }
-
         return moves;
     }
 }

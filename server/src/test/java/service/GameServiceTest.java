@@ -47,6 +47,15 @@ class GameServiceTest {
     }
 
     @Test
+    void badListGames() throws DataAccessException {
+        try {
+            gameService.listGames(new ListGamesRequest("diggie"));
+        } catch (DataAccessException e) {
+            assertEquals("Error: unauthorized", e.getMessage());
+        }
+    }
+
+    @Test
     void createGame() throws DataAccessException {
         authDAO.createAuth(new AuthData("authToken", "username"));
         CreateGameResult createGameResult = gameService.createGame(new CreateGameRequest("authToken", "gameName"));
@@ -55,10 +64,31 @@ class GameServiceTest {
     }
 
     @Test
+    void badCreateGame() throws DataAccessException {
+        try {
+            authDAO.createAuth(new AuthData("authToken", "username"));
+            gameService.createGame(new CreateGameRequest("authToken", null));
+        } catch (DataAccessException e) {
+            assertEquals("Error: bad request", e.getMessage());
+        }
+    }
+
+    @Test
     void joinGame() throws DataAccessException {
         authDAO.createAuth(new AuthData("authToken", "username"));
         gameDAO.createGame(new GameData(123, null, "player", "game1", new ChessGame()));
         gameService.joinGame(new JoinGameRequest("authToken", "white", 123));
         assertEquals("username", gameDAO.getGame(123).getWhiteUsername());
+    }
+
+    @Test
+    void badJoinGame() throws DataAccessException {
+        try {
+            authDAO.createAuth(new AuthData("authToken", "username"));
+            gameDAO.createGame(new GameData(123, "Player", "Player", "diggy game", new ChessGame()));
+            gameService.joinGame(new JoinGameRequest("authToken", "WHITE", 123));
+        } catch(DataAccessException e) {
+            assertEquals("Error: already taken", e.getMessage());
+        }
     }
 }

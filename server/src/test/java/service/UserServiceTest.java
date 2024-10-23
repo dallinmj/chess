@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import service.requestresult.*;
 import service.requestresult.userrequestresult.*;
 
+import javax.xml.crypto.Data;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserServiceTest {
@@ -74,6 +76,15 @@ class UserServiceTest {
         userService.logout(new LogoutRequest(loginResult.authToken()));
         try {
             authDAO.getAuth(loginResult.authToken());
+        } catch (DataAccessException e) {
+            assertEquals("Error: unauthorized", e.getMessage());
+        }
+    }
+
+    @Test
+    void badLogout() throws DataAccessException {
+        try {
+            userService.logout(new LogoutRequest("diggy"));
         } catch (DataAccessException e) {
             assertEquals("Error: unauthorized", e.getMessage());
         }

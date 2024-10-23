@@ -32,17 +32,7 @@ public class PawnCalculator {
             ChessMove move = new ChessMove(position, newPosition, null);
             String check = PieceCalculator.checkMove(board, newPosition, piece);
             if (check.equals("empty")){
-                if (newY == 1 || newY == 8){
-                    for (ChessPiece.PieceType type : ChessPiece.PieceType.values()){
-                        if (type == ChessPiece.PieceType.KING || type == ChessPiece.PieceType.PAWN){
-                            continue;
-                        }
-                        move = new ChessMove(position, newPosition, type);
-                        moves.add(move);
-                    }
-                } else {
-                    moves.add(move);
-                }
+                moveUp(position, moves, newPosition, newY, move);
             }
         }
         // Up x2
@@ -62,46 +52,38 @@ public class PawnCalculator {
         }
         // Up Right
         newPosition = new ChessPosition(y + upOrDown, x - upOrDown);
-        newX = newPosition.getColumn();
-        newY = newPosition.getRow();
-        if (newY <= 8 && newY >= 1 && newX <= 8 && newX >= 1){
-            ChessMove move = new ChessMove(position, newPosition, null);
-            String check = PieceCalculator.checkMove(board, newPosition, piece);
-            if (check.equals("enemy")){
-                if (newY == 1 || newY == 8){
-                    for (ChessPiece.PieceType type : ChessPiece.PieceType.values()){
-                        if (type == ChessPiece.PieceType.KING || type == ChessPiece.PieceType.PAWN){
-                            continue;
-                        }
-                        move = new ChessMove(position, newPosition, type);
-                        moves.add(move);
-                    }
-                } else {
-                    moves.add(move);
-                }
-            }
-        }
+        initializeMove(board, position, piece, moves, newPosition);
         // Up Left
         newPosition = new ChessPosition(y + upOrDown, x + upOrDown);
+        initializeMove(board, position, piece, moves, newPosition);
+        return moves;
+    }
+
+    private static void initializeMove(ChessBoard board, ChessPosition position, ChessPiece piece, Collection<ChessMove> moves, ChessPosition newPosition) {
+        int newX;
+        int newY;
         newX = newPosition.getColumn();
         newY = newPosition.getRow();
         if (newY <= 8 && newY >= 1 && newX <= 8 && newX >= 1){
             ChessMove move = new ChessMove(position, newPosition, null);
             String check = PieceCalculator.checkMove(board, newPosition, piece);
             if (check.equals("enemy")){
-                if (newY == 1 || newY == 8){
-                    for (ChessPiece.PieceType type : ChessPiece.PieceType.values()){
-                        if (type == ChessPiece.PieceType.KING || type == ChessPiece.PieceType.PAWN){
-                            continue;
-                        }
-                        move = new ChessMove(position, newPosition, type);
-                        moves.add(move);
-                    }
-                } else {
-                    moves.add(move);
-                }
+                moveUp(position, moves, newPosition, newY, move);
             }
         }
-        return moves;
+    }
+
+    private static void moveUp(ChessPosition position, Collection<ChessMove> moves, ChessPosition newPosition, int newY, ChessMove move) {
+        if (newY == 1 || newY == 8){
+            for (ChessPiece.PieceType type : ChessPiece.PieceType.values()){
+                if (type == ChessPiece.PieceType.KING || type == ChessPiece.PieceType.PAWN){
+                    continue;
+                }
+                move = new ChessMove(position, newPosition, type);
+                moves.add(move);
+            }
+        } else {
+            moves.add(move);
+        }
     }
 }

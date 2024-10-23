@@ -83,8 +83,6 @@ public class KingCalculator {
                 moves.add(move);
             }
         }
-
-
         return moves;
     }
 }

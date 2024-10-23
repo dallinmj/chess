@@ -59,7 +59,8 @@ public class PawnCalculator {
         return moves;
     }
 
-    private static void initializeMove(ChessBoard board, ChessPosition position, ChessPiece piece, Collection<ChessMove> moves, ChessPosition newPosition) {
+    private static void initializeMove(ChessBoard board, ChessPosition position,
+                                       ChessPiece piece, Collection<ChessMove> moves, ChessPosition newPosition) {
         int newX;
         int newY;
         newX = newPosition.getColumn();
@@ -73,7 +74,8 @@ public class PawnCalculator {
         }
     }
 
-    private static void moveUp(ChessPosition position, Collection<ChessMove> moves, ChessPosition newPosition, int newY, ChessMove move) {
+    private static void moveUp(ChessPosition position, Collection<ChessMove> moves,
+                               ChessPosition newPosition, int newY, ChessMove move) {
         if (newY == 1 || newY == 8){
             for (ChessPiece.PieceType type : ChessPiece.PieceType.values()){
                 if (type == ChessPiece.PieceType.KING || type == ChessPiece.PieceType.PAWN){

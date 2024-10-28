@@ -30,14 +30,7 @@ public class KnightCalculator {
             }
         }
         // Right Down
-        if (y > 1 && x < 7){
-            ChessPosition newPosition = new ChessPosition(y - 1, x + 2);
-            ChessMove move = new ChessMove(position, newPosition, null);
-            String check = PieceCalculator.checkMove(board, newPosition, piece);
-            if (!check.equals("teammate")){
-                moves.add(move);
-            }
-        }
+        KingCalculator.downRight(board, position, piece, moves, x, y, 7, 2);
         // Down Right
         if (y > 2 && x < 8){
             ChessPosition newPosition = new ChessPosition(y - 2, x + 1);

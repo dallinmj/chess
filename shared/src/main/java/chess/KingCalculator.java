@@ -57,14 +57,8 @@ public class KingCalculator {
             }
         }
         // Down Right
-        if (y > 1 && x < 8){
-            ChessPosition newPosition = new ChessPosition(y - 1, x + 1);
-            ChessMove move = new ChessMove(position, newPosition, null);
-            String check = PieceCalculator.checkMove(board, newPosition, piece);
-            if (!check.equals("teammate")){
-                moves.add(move);
-            }
-        }
+        downRight(board, position, piece, moves, x, y, 8, 1);
+
         // Down Left
         if (y > 1 && x > 1){
             ChessPosition newPosition = new ChessPosition(y - 1, x - 1);
@@ -84,5 +78,16 @@ public class KingCalculator {
             }
         }
         return moves;
+    }
+
+    static void downRight(ChessBoard board, ChessPosition position, ChessPiece piece, Collection<ChessMove> moves, int x, int y, int i, int i2) {
+        if (y > 1 && x < i){
+            ChessPosition newPosition = new ChessPosition(y - 1, x + i2);
+            ChessMove move = new ChessMove(position, newPosition, null);
+            String check = PieceCalculator.checkMove(board, newPosition, piece);
+            if (!check.equals("teammate")){
+                moves.add(move);
+            }
+        }
     }
 }

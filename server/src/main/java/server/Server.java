@@ -22,6 +22,10 @@ public class Server {
         MemoryAuthDAO memoryAuthDAO = new MemoryAuthDAO();
         MemoryUserDAO memoryUserDAO = new MemoryUserDAO();
 
+        // Create database here
+
+        // Initialize MySqlDAOs here
+
         // Register your endpoints and handle exceptions here.
         UserService userService = new UserService(memoryAuthDAO, memoryUserDAO, memoryGameDAO);
         GameService gameService = new GameService(memoryAuthDAO, memoryGameDAO);

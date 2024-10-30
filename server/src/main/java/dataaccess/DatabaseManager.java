@@ -27,6 +27,8 @@ public class DatabaseManager {
                 var host = props.getProperty("db.host");
                 var port = Integer.parseInt(props.getProperty("db.port"));
                 CONNECTION_URL = String.format("jdbc:mysql://%s:%d", host, port);
+
+                // Create database here?
             }
         } catch (Exception ex) {
             throw new RuntimeException("unable to process db.properties. " + ex.getMessage());
@@ -69,4 +71,46 @@ public class DatabaseManager {
             throw new DataAccessException(e.getMessage());
         }
     }
+
+    private final String[] createStatements = {
+            """
+            CREATE TABLE IF NOT EXISTS User (
+              `username` varchar(50) primary key,
+              `password` varchar(50) not null,
+              `email` varchar(256) not null unique
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS Game (
+              `gameID` varchar(10) primary key,
+              `whiteUsername` varchar(50),
+              `blackUsername` varchar(50),
+              `gameName` varchar(100) not null,
+              `game` text,
+              foreign key (`whiteUsername`) references User(`username`),
+              foreign key (`blackUsername`) references User(`username`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS Auth (
+              `authToken` varchar(100) primary key,
+              `username` varchar(50),
+              foreign key (`username`) references User(`username`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+            """
+    };
+
+    public void configureDatabase() throws DataAccessException {
+        DatabaseManager.createDatabase();
+        try (var conn = DatabaseManager.getConnection()) {
+            for (var statement : createStatements) {
+                try (var preparedStatement = conn.prepareStatement(statement)) {
+                    preparedStatement.executeUpdate();
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataAccessException(String.format("Unable to configure database: %s", ex.getMessage()));
+        }
+    }
+
 }

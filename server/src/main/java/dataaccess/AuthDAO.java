@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public interface AuthDAO {
 
-    void createAuth(AuthData a) throws DataAccessException, SQLException;
+    void createAuth(AuthData a) throws DataAccessException;
 
     AuthData getAuth(String authToken) throws DataAccessException;
 

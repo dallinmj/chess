@@ -1,9 +1,7 @@
 package dataaccess;
 
-import com.google.gson.Gson;
 import model.AuthData;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class MySqlAuthDAO implements AuthDAO {
@@ -13,10 +11,16 @@ public class MySqlAuthDAO implements AuthDAO {
         databaseManager.configureDatabase();
     }
     @Override
-    public void createAuth(AuthData a) throws DataAccessException, SQLException {
+    public void createAuth(AuthData a) throws DataAccessException {
         var statement = "Insert into Auth (authToken, username) values (?, ?)";
         try (var conn = DatabaseManager.getConnection()) {
-
+            try (var ps = conn.prepareStatement(statement)) {
+                ps.setString(1, a.authToken());
+                ps.setString(2, a.username());
+                ps.executeUpdate();
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(e.getMessage());
         }
     }
 

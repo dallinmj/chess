@@ -1,8 +1,6 @@
 package server;
 
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.*;
 import server.handlers.ClearHandler;
 import server.handlers.GameHandler;
 import server.handlers.UserHandler;
@@ -18,18 +16,31 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
-        MemoryGameDAO memoryGameDAO = new MemoryGameDAO();
-        MemoryAuthDAO memoryAuthDAO = new MemoryAuthDAO();
-        MemoryUserDAO memoryUserDAO = new MemoryUserDAO();
+        try {
+            DatabaseManager databaseManager = new DatabaseManager();
+            databaseManager.configureDatabase();
+        } catch (DataAccessException ignored){
 
-        // Create database here
+        }
 
-        // Initialize MySqlDAOs here
+        GameDAO gameDAO;
+        AuthDAO authDAO;
+        UserDAO userDAO;
 
-        // Register your endpoints and handle exceptions here.
-        UserService userService = new UserService(memoryAuthDAO, memoryUserDAO, memoryGameDAO);
-        GameService gameService = new GameService(memoryAuthDAO, memoryGameDAO);
-        ClearService clearService = new ClearService(memoryAuthDAO, memoryUserDAO, memoryGameDAO);
+        boolean sql = true;
+        if (sql) {
+            gameDAO = new MySqlGameDAO();
+            authDAO = new MySqlAuthDAO();
+            userDAO = new MySqlUserDAO();
+        } else {
+            gameDAO = new MemoryGameDAO();
+            authDAO = new MemoryAuthDAO();
+            userDAO = new MemoryUserDAO();
+        }
+
+        UserService userService = new UserService(authDAO, userDAO, gameDAO);
+        GameService gameService = new GameService(authDAO, gameDAO);
+        ClearService clearService = new ClearService(authDAO, userDAO, gameDAO);
 
         UserHandler userHandler = new UserHandler(userService);
         GameHandler gameHandler = new GameHandler(gameService);
@@ -42,9 +53,6 @@ public class Server {
         Spark.get("/game", gameHandler::listGames);
         Spark.put("/game", gameHandler::joinGame);
         Spark.delete("/db", clearHandler::clear);
-
-        //This line initializes the server and can be removed once you have a functioning endpoint 
-        Spark.init();
 
         Spark.awaitInitialization();
         return Spark.port();

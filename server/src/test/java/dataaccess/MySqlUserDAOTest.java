@@ -10,13 +10,16 @@ class MySqlUserDAOTest {
 
     MySqlUserDAO mySqlUserDAO;
     MySqlAuthDAO mySqlAuthDAO;
+    MySqlGameDAO mySqlGameDAO;
 
     @BeforeEach
     void setUp() throws DataAccessException {
         mySqlUserDAO = new MySqlUserDAO();
         mySqlAuthDAO = new MySqlAuthDAO();
+        mySqlGameDAO = new MySqlGameDAO();
         DatabaseManager databaseManager = new DatabaseManager();
         databaseManager.configureDatabase();
+        mySqlGameDAO.clearAllGames();
         mySqlAuthDAO.clearAllAuth();
         mySqlUserDAO.clearAllUsers();
     }

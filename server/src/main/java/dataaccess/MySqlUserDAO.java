@@ -22,7 +22,9 @@ public class MySqlUserDAO implements UserDAO{
     @Override
     public UserData getUser(String username) throws DataAccessException {
         String statement = "select password, email from User where username=?";
-        executeQuery(statement, ps -> {}, rs -> {
+        return executeQuery(statement, ps -> {
+            ps.setString(1, username);
+        }, rs -> {
             if (rs.next()) {
                 String password = rs.getString("password");
                 String email = rs.getString("email");
@@ -30,7 +32,6 @@ public class MySqlUserDAO implements UserDAO{
             }
             return null;
         });
-        return null;
     }
 
     @Override

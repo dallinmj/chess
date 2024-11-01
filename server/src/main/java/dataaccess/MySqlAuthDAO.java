@@ -7,11 +7,6 @@ import java.util.ArrayList;
 
 public class MySqlAuthDAO implements AuthDAO {
 
-    public MySqlAuthDAO() throws DataAccessException {
-        DatabaseManager databaseManager = new DatabaseManager();
-        databaseManager.configureDatabase();
-    }
-
     @Override
     public void createAuth(AuthData a) throws DataAccessException {
         var statement = "insert into Auth (authToken, username) values (?, ?)";

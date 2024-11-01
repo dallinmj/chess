@@ -42,27 +42,16 @@ public class MySqlAuthDAO implements AuthDAO {
 
     @Override
     public void deleteAuth(AuthData a) throws DataAccessException {
-        var statement = "Delete from Auth where authToken=?";
-        try (var conn = DatabaseManager.getConnection()) {
-            try (var ps = conn.prepareStatement(statement)) {
-                ps.setString(1, a.authToken());
-                ps.executeUpdate();
-            }
-        } catch (Exception e) {
-            throw new DataAccessException(e.getMessage());
-        }
+        var statement = "delete from Auth where authToken=?";
+        executeUpdate(statement, ps -> {
+            ps.setString(1, a.authToken());
+        });
     }
 
     @Override
     public void clearAllAuth() throws DataAccessException {
-        var statement = "Delete from Auth";
-        try (var conn = DatabaseManager.getConnection()) {
-            try (var ps = conn.prepareStatement(statement)) {
-                ps.executeUpdate();
-            }
-        } catch (Exception e) {
-            throw new DataAccessException(e.getMessage());
-        }
+        var statement = "delete from Auth";
+        executeUpdate(statement, ps -> {});
     }
 
     @Override
@@ -87,7 +76,20 @@ public class MySqlAuthDAO implements AuthDAO {
 
     @Override
     public String getUsername(String authToken) throws DataAccessException {
-        return "";
+        var statement = "select username from Auth where authToken=?";
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var ps = conn.prepareStatement(statement)) {
+                ps.setString(1, authToken);
+                try (var rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return rs.getString("username");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(e.getMessage());
+        }
+        return null;
     }
 
     @FunctionalInterface

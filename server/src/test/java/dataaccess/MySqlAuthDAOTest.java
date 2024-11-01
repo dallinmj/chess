@@ -64,6 +64,9 @@ class MySqlAuthDAOTest {
     }
 
     @Test
-    void getUsername() {
+    void getUsername() throws DataAccessException {
+        mySqlUserDAO.createUser(new UserData("getMe", "getmeplz", "emailyay"));
+        mySqlAuthDAO.createAuth(new AuthData("useMe", "getMe"));
+        System.out.println(mySqlAuthDAO.getUsername("useMe"));
     }
 }

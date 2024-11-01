@@ -26,16 +26,19 @@ public class MySqlAuthDAO implements AuthDAO {
                 String username = rs.getString("username");
                 return new AuthData(authToken, username);
             }
-            return null;
+            throw new DataAccessException("Error: unauthorized");
         });
     }
 
     @Override
     public void deleteAuth(AuthData a) throws DataAccessException {
         var statement = "delete from Auth where authToken=?";
-        executeUpdate(statement, ps -> {
+        int affectedRows = executeUpdate(statement, ps -> {
             ps.setString(1, a.authToken());
         });
+        if (affectedRows == 0) {
+            throw new DataAccessException("Error: auth not found");
+        }
     }
 
     @Override
@@ -76,11 +79,11 @@ public class MySqlAuthDAO implements AuthDAO {
         void prepare(java.sql.PreparedStatement ps) throws SQLException;
     }
 
-    static void executeUpdate(String statement, StatementPreparer preparer) throws DataAccessException {
+    static int executeUpdate(String statement, StatementPreparer preparer) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
             try (var ps = conn.prepareStatement(statement)) {
                 preparer.prepare(ps);
-                ps.executeUpdate();
+                return ps.executeUpdate();
             }
         } catch (Exception e) {
             throw new DataAccessException(e.getMessage());
@@ -89,7 +92,7 @@ public class MySqlAuthDAO implements AuthDAO {
 
     @FunctionalInterface
     interface ResultSetHandler<T> {
-        T handle(java.sql.ResultSet rs) throws SQLException;
+        T handle(java.sql.ResultSet rs) throws SQLException, DataAccessException;
     }
 
     static <T> T executeQuery(String statement, StatementPreparer preparer, ResultSetHandler<T> handler) throws DataAccessException {

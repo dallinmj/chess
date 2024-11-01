@@ -61,29 +61,39 @@ public class MySqlGameDAO implements GameDAO{
                 var chessGame = serializer.fromJson(gameJson, ChessGame.class);
                 return new GameData(gameId, whiteUsername, blackUsername, gameName, chessGame);
             }
-            return null;
+            throw new DataAccessException("Error: game not found");
         });
     }
 
     @Override
     public String checkTeamColor(GameData g, String playerColor) throws DataAccessException {
         int gameID = g.gameID();
-        String playerColorCopy = playerColor;
-        playerColor = playerColorCopy.toLowerCase();
-        String statement = "select " + playerColor + "Username from Game where gameID=?";
+        String playerColorLower = playerColor.toLowerCase();
+
+        if (!playerColorLower.equals("white") && !playerColorLower.equals("black")) {
+            throw new DataAccessException("Invalid player color");
+        }
+
+        String statement = "select " + playerColorLower + "Username from Game where gameID=?";
         return executeQuery(statement, ps -> {
             ps.setInt(1, gameID);
         }, rs -> {
             if (rs.next()) {
-                return rs.getString(playerColorCopy + "Username");
+                return rs.getString(playerColorLower + "Username");
             }
-            return null;
+            throw new DataAccessException("checkTeamColor- Game not found or something");
         });
     }
 
     @Override
     public void addPlayer(GameData g, String playerColor, String username) throws DataAccessException {
-        String statement = "update Game set " + playerColor + "Username=? where gameID=?";
+        String playerColorLower = playerColor.toLowerCase();
+
+        if (!playerColorLower.equals("white") && !playerColorLower.equals("black")) {
+            throw new DataAccessException("Invalid player color");
+        }
+
+        String statement = "update Game set " + playerColorLower + "Username=? where gameID=?";
         executeUpdate(statement, ps -> {
             ps.setString(1, username);
             ps.setInt(2, g.gameID());

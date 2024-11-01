@@ -30,7 +30,7 @@ public class MySqlUserDAO implements UserDAO{
                 String email = rs.getString("email");
                 return new UserData(username, password, email);
             }
-            return null;
+            throw new DataAccessException("User not found");
         });
     }
 

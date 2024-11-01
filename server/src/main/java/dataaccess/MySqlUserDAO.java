@@ -1,6 +1,7 @@
 package dataaccess;
 
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.ArrayList;
 
@@ -14,7 +15,7 @@ public class MySqlUserDAO implements UserDAO{
         var statement = "insert into User (username, password, email) values (?, ?, ?)";
         executeUpdate(statement, ps -> {
             ps.setString(1, u.username());
-            ps.setString(2, u.password());
+            ps.setString(2, BCrypt.hashpw(u.password(), BCrypt.gensalt()));
             ps.setString(3, u.email());
         });
     }

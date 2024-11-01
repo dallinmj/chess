@@ -74,34 +74,65 @@ public class MySqlAuthDAO implements AuthDAO {
         return result;
     }
 
+//    @Override
+//    public String getUsername(String authToken) throws DataAccessException {
+//        var statement = "select username from Auth where authToken=?";
+//        try (var conn = DatabaseManager.getConnection()) {
+//            try (var ps = conn.prepareStatement(statement)) {
+//                ps.setString(1, authToken);
+//                try (var rs = ps.executeQuery()) {
+//                    if (rs.next()) {
+//                        return rs.getString("username");
+//                    }
+//                }
+//            }
+//        } catch (Exception e) {
+//            throw new DataAccessException(e.getMessage());
+//        }
+//        return null;
+//    }
+
     @Override
     public String getUsername(String authToken) throws DataAccessException {
         var statement = "select username from Auth where authToken=?";
-        try (var conn = DatabaseManager.getConnection()) {
-            try (var ps = conn.prepareStatement(statement)) {
-                ps.setString(1, authToken);
-                try (var rs = ps.executeQuery()) {
-                    if (rs.next()) {
-                        return rs.getString("username");
-                    }
-                }
+        return executeQuery(statement, ps -> {
+            ps.setString(1, authToken);
+        }, rs -> {
+            if (rs.next()) {
+                return rs.getString("username");
             }
-        } catch (Exception e) {
-            throw new DataAccessException(e.getMessage());
-        }
-        return null;
+            return null;
+        });
     }
 
     @FunctionalInterface
-    private interface StatementPreparer {
+    interface StatementPreparer {
         void prepare(java.sql.PreparedStatement ps) throws SQLException;
     }
 
-    private void executeUpdate(String statement, StatementPreparer preparer) throws DataAccessException {
+    static void executeUpdate(String statement, StatementPreparer preparer) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
             try (var ps = conn.prepareStatement(statement)) {
                 preparer.prepare(ps);
                 ps.executeUpdate();
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
+    @FunctionalInterface
+    interface ResultSetHandler<T> {
+        T handle(java.sql.ResultSet rs) throws SQLException;
+    }
+
+    static <T> T executeQuery(String statement, StatementPreparer preparer, ResultSetHandler<T> handler) throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var ps = conn.prepareStatement(statement)) {
+                preparer.prepare(ps);
+                try (var rs = ps.executeQuery()) {
+                    return handler.handle(rs);
+                }
             }
         } catch (Exception e) {
             throw new DataAccessException(e.getMessage());

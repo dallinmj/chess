@@ -24,20 +24,15 @@ public class MySqlAuthDAO implements AuthDAO {
     @Override
     public AuthData getAuth(String authToken) throws DataAccessException {
         var statement = "Select username from Auth where authToken=?";
-        try (var conn = DatabaseManager.getConnection()) {
-            try (var ps = conn.prepareStatement(statement)) {
-                ps.setString(1, authToken);
-                try (var rs = ps.executeQuery()){
-                    if (rs.next()) {
-                        String username = rs.getString("username");
-                        return new AuthData(authToken, username);
-                    }
-                }
+        return executeQuery(statement, ps -> {
+            ps.setString(1, authToken);
+        }, rs -> {
+            if (rs.next()) {
+                String username = rs.getString("username");
+                return new AuthData(authToken, username);
             }
-        } catch (Exception e) {
-            throw new DataAccessException(e.getMessage());
-        }
-        return null;
+            return null;
+        });
     }
 
     @Override
@@ -57,40 +52,16 @@ public class MySqlAuthDAO implements AuthDAO {
     @Override
     public ArrayList<AuthData> listAuths() throws DataAccessException {
         var result = new ArrayList<AuthData>();
-        var statement = "Select authToken, username from Auth";
-        try (var conn = DatabaseManager.getConnection()) {
-            try (var ps = conn.prepareStatement(statement)) {
-                try (var rs = ps.executeQuery()) {
-                    while (rs.next()) {
-                        String authToken = rs.getString("authToken");
-                        String username = rs.getString("username");
-                        result.add(new AuthData(authToken, username));
-                    }
-                }
+        var statement = "select authToken, username from Auth";
+        return executeQuery(statement, ps -> {}, rs -> {
+            while (rs.next()) {
+                String authToken = rs.getString("authToken");
+                String username = rs.getString("username");
+                result.add(new AuthData(authToken, username));
             }
-        } catch (Exception e) {
-            throw new DataAccessException(e.getMessage());
-        }
-        return result;
+            return result;
+        });
     }
-
-//    @Override
-//    public String getUsername(String authToken) throws DataAccessException {
-//        var statement = "select username from Auth where authToken=?";
-//        try (var conn = DatabaseManager.getConnection()) {
-//            try (var ps = conn.prepareStatement(statement)) {
-//                ps.setString(1, authToken);
-//                try (var rs = ps.executeQuery()) {
-//                    if (rs.next()) {
-//                        return rs.getString("username");
-//                    }
-//                }
-//            }
-//        } catch (Exception e) {
-//            throw new DataAccessException(e.getMessage());
-//        }
-//        return null;
-//    }
 
     @Override
     public String getUsername(String authToken) throws DataAccessException {

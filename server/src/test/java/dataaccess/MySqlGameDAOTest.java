@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static dataaccess.MySqlAuthDAO.executeQuery;
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,6 +19,8 @@ class MySqlGameDAOTest extends BaseMySqlDAOTest {
         GameData gameData = new GameData(123, null,
                 null, "GameName", new ChessGame());
         mySqlGameDAO.createGame(gameData);
+        GameData checkGameData = mySqlGameDAO.getGame(123);
+        assertEquals(gameData, checkGameData);
     }
 
     @Test
@@ -32,8 +35,8 @@ class MySqlGameDAOTest extends BaseMySqlDAOTest {
         mySqlGameDAO.createGame(gameData1);
         mySqlGameDAO.createGame(gameData2);
         mySqlGameDAO.createGame(gameData3);
-
-        System.out.println(mySqlGameDAO.listGames());
+        ArrayList<GameData> gameDataArrayList = new ArrayList<>(List.of(gameData1, gameData2, gameData3));
+        assertEquals(gameDataArrayList, mySqlGameDAO.listGames());
     }
 
     @Test
@@ -41,7 +44,7 @@ class MySqlGameDAOTest extends BaseMySqlDAOTest {
         GameData gameData = new GameData(4, null,
                 null, "GetMe!", new ChessGame());
         mySqlGameDAO.createGame(gameData);
-        System.out.println(mySqlGameDAO.getGame(4));
+        assertEquals(gameData, mySqlGameDAO.getGame(4));
     }
 
     @Test
@@ -52,6 +55,7 @@ class MySqlGameDAOTest extends BaseMySqlDAOTest {
                 null, "Hey bro", new ChessGame());
         mySqlGameDAO.createGame(gameData);
         System.out.println(mySqlGameDAO.checkTeamColor(gameData, "white"));
+        assertEquals("getMeBro", mySqlGameDAO.checkTeamColor(gameData, "white"));
     }
 
     @Test
@@ -66,11 +70,15 @@ class MySqlGameDAOTest extends BaseMySqlDAOTest {
 
         mySqlGameDAO.addPlayer(gameData, "white", "addMe");
 
-        System.out.println(mySqlGameDAO.getGame(6));
+        assertEquals(new GameData(6, "addMe", null,
+                "GiveMe", new ChessGame()), mySqlGameDAO.getGame(6));
     }
 
     @Test
     void clearAllGames() throws DataAccessException {
+        mySqlGameDAO.createGame(new GameData(7, null,
+                null, "GameName", new ChessGame()));
         mySqlGameDAO.clearAllGames();
+        assertEquals(new ArrayList<GameData>(), mySqlGameDAO.listGames());
     }
 }

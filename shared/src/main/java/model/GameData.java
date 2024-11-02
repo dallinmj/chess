@@ -29,10 +29,11 @@ public record GameData(int gameID, String whiteUsername, String blackUsername, S
     public boolean equals(Object o) {
         if (this == o) {return true;}
         if (!(o instanceof GameData gameData)) {return false;}
-        return gameID == gameData.gameID && Objects.equals(game, gameData.game) &&
+        return gameID == gameData.gameID &&
                 Objects.equals(gameName, gameData.gameName) &&
                 Objects.equals(whiteUsername, gameData.whiteUsername) &&
-                Objects.equals(blackUsername, gameData.blackUsername);
+                Objects.equals(blackUsername, gameData.blackUsername) &&
+                Objects.equals(game, gameData.game);
     }
 
     @Override

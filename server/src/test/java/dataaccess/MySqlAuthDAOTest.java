@@ -7,23 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MySqlAuthDAOTest {
-
-    MySqlAuthDAO mySqlAuthDAO;
-    MySqlUserDAO mySqlUserDAO;
-    MySqlGameDAO mySqlGameDAO;
-
-    @BeforeEach
-    void setUp() throws DataAccessException {
-        mySqlAuthDAO = new MySqlAuthDAO();
-        mySqlUserDAO = new MySqlUserDAO();
-        mySqlGameDAO = new MySqlGameDAO();
-        DatabaseManager databaseManager = new DatabaseManager();
-        databaseManager.configureDatabase();
-        mySqlGameDAO.clearAllGames();
-        mySqlAuthDAO.clearAllAuth();
-        mySqlUserDAO.clearAllUsers();
-    }
+class MySqlAuthDAOTest extends BaseMySqlDAOTest {
 
     @Test
     void createAuth() throws DataAccessException {
@@ -47,7 +31,11 @@ class MySqlAuthDAOTest {
         mySqlAuthDAO.createAuth(authData);
         System.out.println(mySqlAuthDAO.getAuth(authData.authToken()));
         mySqlAuthDAO.deleteAuth(authData);
-        System.out.println(mySqlAuthDAO.getAuth(authData.authToken()));
+        try {
+            System.out.println(mySqlAuthDAO.getAuth(authData.authToken()));
+        } catch (DataAccessException e) {
+            assertEquals(e.getMessage(), "Error: unauthorized");
+        }
     }
 
     @Test

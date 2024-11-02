@@ -6,23 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MySqlUserDAOTest {
-
-    MySqlUserDAO mySqlUserDAO;
-    MySqlAuthDAO mySqlAuthDAO;
-    MySqlGameDAO mySqlGameDAO;
-
-    @BeforeEach
-    void setUp() throws DataAccessException {
-        mySqlUserDAO = new MySqlUserDAO();
-        mySqlAuthDAO = new MySqlAuthDAO();
-        mySqlGameDAO = new MySqlGameDAO();
-        DatabaseManager databaseManager = new DatabaseManager();
-        databaseManager.configureDatabase();
-        mySqlGameDAO.clearAllGames();
-        mySqlAuthDAO.clearAllAuth();
-        mySqlUserDAO.clearAllUsers();
-    }
+class MySqlUserDAOTest extends BaseMySqlDAOTest {
 
     @Test
     void createUser() throws DataAccessException {

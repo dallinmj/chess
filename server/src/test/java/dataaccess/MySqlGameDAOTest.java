@@ -11,23 +11,7 @@ import java.util.ArrayList;
 import static dataaccess.MySqlAuthDAO.executeQuery;
 import static org.junit.jupiter.api.Assertions.*;
 
-class MySqlGameDAOTest {
-
-    MySqlUserDAO mySqlUserDAO;
-    MySqlAuthDAO mySqlAuthDAO;
-    MySqlGameDAO mySqlGameDAO;
-
-    @BeforeEach
-    void setUp() throws DataAccessException {
-        mySqlUserDAO = new MySqlUserDAO();
-        mySqlAuthDAO = new MySqlAuthDAO();
-        mySqlGameDAO = new MySqlGameDAO();
-        DatabaseManager databaseManager = new DatabaseManager();
-        databaseManager.configureDatabase();
-        mySqlGameDAO.clearAllGames();
-        mySqlAuthDAO.clearAllAuth();
-        mySqlUserDAO.clearAllUsers();
-    }
+class MySqlGameDAOTest extends BaseMySqlDAOTest {
 
     @Test
     void createGame() throws DataAccessException {

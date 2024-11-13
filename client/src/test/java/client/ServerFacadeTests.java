@@ -51,9 +51,8 @@ public class ServerFacadeTests {
 
     @Test
     public void logoutTest() throws DataAccessException {
-        ServerFacade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
-        LoginResult loginResult = ServerFacade.login(new LoginRequest("doug", "goodpassword"));
-        String auth = loginResult.authToken();
+        RegisterResult registerResult = ServerFacade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
+        String auth = registerResult.authToken();
 
         LogoutRequest logoutRequest = new LogoutRequest(auth);
         var result = ServerFacade.logout(logoutRequest);
@@ -67,6 +66,17 @@ public class ServerFacadeTests {
         CreateGameRequest createGameRequest = new CreateGameRequest(auth, "gamename!");
         var createGameResult = ServerFacade.createGame(createGameRequest);
         Assertions.assertNotNull(createGameResult);
+    }
+
+    @Test
+    public void joinGameTest() throws DataAccessException {
+        RegisterResult registerResult = ServerFacade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
+        String auth = registerResult.authToken();
+        CreateGameRequest createGameRequest = new CreateGameRequest(auth, "gamename!");
+        var createGameResult = ServerFacade.createGame(createGameRequest);
+        JoinGameRequest joinGameRequest = new JoinGameRequest(auth, "white", createGameResult.gameID());
+        var joinGameResult = ServerFacade.joinGame(joinGameRequest);
+        Assertions.assertNotNull(joinGameResult);
     }
 
 }

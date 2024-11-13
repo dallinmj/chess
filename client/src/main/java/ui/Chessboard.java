@@ -13,7 +13,8 @@ public class Chessboard {
     public static void main(String[] args){
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
-        ChessPiece[][] board = {{new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK),
+        ChessPiece[][] board = {{
+                                new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK),
                                 new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT),
                                 new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP),
                                 new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN),
@@ -48,7 +49,8 @@ public class Chessboard {
                                 new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING),
                                 new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP),
                                 new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT),
-                                new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK)}};
+                                new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK)}
+                                };
         out.print(ERASE_SCREEN);
         drawBoard(out, board, ChessGame.TeamColor.WHITE);
         out.print("\n");

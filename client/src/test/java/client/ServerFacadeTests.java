@@ -7,6 +7,7 @@ import server.Server;
 import service.requestresult.ClearRequest;
 import service.requestresult.gamerequestresult.CreateGameRequest;
 import service.requestresult.gamerequestresult.JoinGameRequest;
+import service.requestresult.gamerequestresult.ListGamesRequest;
 import service.requestresult.userrequestresult.*;
 
 
@@ -77,6 +78,19 @@ public class ServerFacadeTests {
         JoinGameRequest joinGameRequest = new JoinGameRequest(auth, "white", createGameResult.gameID());
         var joinGameResult = ServerFacade.joinGame(joinGameRequest);
         Assertions.assertNotNull(joinGameResult);
+    }
+
+    @Test
+    public void listGamesTest() throws DataAccessException {
+        RegisterResult registerResult = ServerFacade.register(new RegisterRequest("new", "newpass", "Diggyemail"));
+        String auth = registerResult.authToken();
+        CreateGameRequest createGameRequest = new CreateGameRequest(auth, "newgame");
+        var createGameResult = ServerFacade.createGame(createGameRequest);
+        CreateGameRequest createGameRequest2 = new CreateGameRequest(auth, "antohergame");
+        var createGameResult2 = ServerFacade.createGame(createGameRequest);
+        ListGamesRequest listGamesRequest = new ListGamesRequest(auth);
+        var listGamesResult = ServerFacade.listGames(listGamesRequest);
+        Assertions.assertNotNull(listGamesResult);
     }
 
 }

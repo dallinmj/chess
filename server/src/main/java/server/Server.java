@@ -9,13 +9,6 @@ import service.GameService;
 import service.UserService;
 import spark.*;
 
-// Unicode characters- use the Em Space character instead\
-// chessboard class for gui, then client class that calls gui- two classes (then serverFacade class)
-// client has main method- it calls everything
-// public class ServerFacade {
-//  LoginResponse login(LoginRequest request)
-//  (each endpoint)
-
 public class Server {
 
     public int run(int desiredPort) {

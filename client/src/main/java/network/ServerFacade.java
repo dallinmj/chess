@@ -1,5 +1,6 @@
 package network;
 
+import dataaccess.DataAccessException;
 import service.requestresult.ClearRequest;
 import service.requestresult.ClearResult;
 import service.requestresult.gamerequestresult.*;
@@ -7,40 +8,37 @@ import service.requestresult.userrequestresult.*;
 
 public class ServerFacade {
 
-    private final ClientCommunicator clientCommunicator;
+    private static ClientCommunicator clientCommunicator;
 
     public ServerFacade(String serverURL) {
         clientCommunicator = new ClientCommunicator(serverURL);
     }
 
-    public static LoginResult login(LoginRequest request) {
-        // http url connection class
-        // create request that calls register api
-        clientCommunicator.makeRequest("POST", "/login", request, LoginResult.class);
-        return null;
+    public static LoginResult login(LoginRequest request) throws DataAccessException {
+        return clientCommunicator.makeRequest("POST", "/session", request, LoginResult.class);
     }
 
-    public static LogoutResult logout(LogoutRequest request) {
-        return null;
+    public static LogoutResult logout(LogoutRequest request) throws DataAccessException {
+        return clientCommunicator.makeRequest("DELETE", "/session", request, LogoutResult.class);
     }
 
-    public static RegisterResult register(RegisterRequest request) {
-        return null;
+    public static RegisterResult register(RegisterRequest request) throws DataAccessException {
+        return clientCommunicator.makeRequest("POST", "/user", request, RegisterResult.class);
     }
 
-    public static JoinGameResult joinGame(JoinGameRequest request) {
-        return null;
+    public static JoinGameResult joinGame(JoinGameRequest request) throws DataAccessException {
+        return clientCommunicator.makeRequest("PUT", "/request", request, JoinGameResult.class);
     }
 
-    public static CreateGameResult createGame(CreateGameRequest request) {
-        return null;
+    public static CreateGameResult createGame(CreateGameRequest request) throws DataAccessException {
+        return clientCommunicator.makeRequest("POST", "/game", request, CreateGameResult.class);
     }
 
-    public static ListGamesResult listGames(ListGamesRequest request) {
-        return null;
+    public static ListGamesResult listGames(ListGamesRequest request) throws DataAccessException {
+        return clientCommunicator.makeRequest("GET", "/game", request, ListGamesResult.class);
     }
 
-    public static ClearResult clear(ClearRequest request) {
-        return null;
+    public static ClearResult clear(ClearRequest request) throws DataAccessException {
+        return clientCommunicator.makeRequest("DELETE", "/db", request, ClearResult.class);
     }
 }

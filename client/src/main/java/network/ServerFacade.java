@@ -27,7 +27,7 @@ public class ServerFacade {
     }
 
     public static JoinGameResult joinGame(JoinGameRequest request) throws DataAccessException {
-        return clientCommunicator.makeRequest("PUT", "/request", request, JoinGameResult.class);
+        return clientCommunicator.makeRequest("PUT", "/game", request, JoinGameResult.class);
     }
 
     public static CreateGameResult createGame(CreateGameRequest request) throws DataAccessException {

@@ -15,7 +15,7 @@ import java.util.Map;
 public class ClientLoggedIn implements Client {
 
     private final String auth;
-    private Map<Integer, Integer> gameIDMap;
+    private final Map<Integer, Integer> gameIDMap;
 
     public ClientLoggedIn(String serverURL, String auth) {
         ServerFacade server = new ServerFacade(serverURL);
@@ -82,7 +82,7 @@ public class ClientLoggedIn implements Client {
         for (var game : games_list) {
             i++;
             gameIDMap.put(i, game.gameID());
-            String prettyGame = STR."Id: <\{i}> Name: <\{game.gameName()}> White: <\{game.whiteUsername()}> Black: <\{game.blackUsername()}>";
+            String prettyGame = "Id: " + i + " Name: <" + game.gameName() + "> White: <" + game.whiteUsername() + "> Black: <" + game.blackUsername() + ">";
             games.append(prettyGame).append("\n");
         }
         return games.toString();

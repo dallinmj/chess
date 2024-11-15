@@ -92,5 +92,4 @@ public class ServerFacadeTests {
         var listGamesResult = ServerFacade.listGames(listGamesRequest);
         Assertions.assertNotNull(listGamesResult);
     }
-
 }

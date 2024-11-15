@@ -1,16 +1,14 @@
 package ui;
 
-import com.sun.nio.sctp.HandlerResult;
-import com.sun.nio.sctp.Notification;
-import com.sun.nio.sctp.NotificationHandler;
-
 import java.util.Scanner;
 
 public class Repl {
-    private final Client client;
+    private Client client;
+    private final String serverUrl;
 
     public Repl(String serverUrl) {
         client = new ClientLoggedOut(serverUrl);
+        this.serverUrl = serverUrl;
     }
 
     public void run() {
@@ -24,7 +22,25 @@ public class Repl {
 
             try {
                 result = client.eval(line);
-                System.out.print(BLUE + result);
+
+                if (result.contains("token:")) {
+                    var token = result.split(":")[1];
+                    this.client = new ClientLoggedIn(serverUrl, token);
+                    this.client.run();
+                    result = "";
+                }
+                if (result.equals("logout")) {
+                    this.client = new ClientLoggedOut(serverUrl);
+                    this.client.run();
+                    result = "";
+                }
+                if (result.equals("board")) {
+//                    var board = new Chessboard();
+                    Chessboard.run(null, null);
+                    result = "";
+                }
+
+                System.out.print(result);
             } catch (Throwable e) {
                 var msg = e.toString();
                 System.out.print(msg);
@@ -33,13 +49,7 @@ public class Repl {
         System.out.println();
     }
 
-    public void notify(Notification notification) {
-        System.out.println(RED + notification.message());
-        printPrompt();
-    }
-
     private void printPrompt() {
-        System.out.print("\n" + RESET + ">>> " + GREEN);
+        System.out.print("\n>>> ");
     }
-
 }

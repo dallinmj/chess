@@ -10,14 +10,17 @@ import service.requestresult.userrequestresult.LogoutRequest;
 import service.requestresult.userrequestresult.RegisterRequest;
 
 import java.util.Arrays;
+import java.util.Map;
 
 public class ClientLoggedIn implements Client {
 
     private final String auth;
+    private Map<Integer, Integer> gameIDMap;
 
     public ClientLoggedIn(String serverURL, String auth) {
         ServerFacade server = new ServerFacade(serverURL);
         this.auth = auth;
+        this.gameIDMap = new java.util.HashMap<>(Map.of());
     }
 
     public void run() {
@@ -34,7 +37,7 @@ public class ClientLoggedIn implements Client {
                 case "logout" -> logout(params);
                 case "create" -> create_game(params);
                 case "list" -> list_games(params);
-                case "play" -> play_game(params);
+                case "join" -> play_game(params);
                 case "observe" -> observe_game(params);
                 case "quit" -> "quit";
                 default -> help();
@@ -58,7 +61,7 @@ public class ClientLoggedIn implements Client {
 
     private String logout(String... params) throws DataAccessException {
         var token = ServerFacade.logout(new LogoutRequest(auth));
-        return "You are now logged out!";
+        return "logout";
         }
 
     private String create_game(String... params) throws DataAccessException {
@@ -74,26 +77,35 @@ public class ClientLoggedIn implements Client {
         var result = ServerFacade.listGames(new ListGamesRequest(auth));
         var games_list = result.games();
         StringBuilder games = new StringBuilder();
+
+        int i = 0;
         for (var game : games_list) {
-            games.append(game.toString()).append("\n");
+            i++;
+            gameIDMap.put(i, game.gameID());
+            String prettyGame = STR."Id: <\{i}> Name: <\{game.gameName()}> White: <\{game.whiteUsername()}> Black: <\{game.blackUsername()}>";
+            games.append(prettyGame).append("\n");
         }
         return games.toString();
     }
 
     private String play_game(String... params) throws DataAccessException {
-        if (params.length >= 2) {
-            var gameID = params[0];
+        if (params.length >= 2 && (params[1].equals("white") || params[1].equals("black"))) {
+            var fakeGameID = params[0];
+            if (!gameIDMap.containsKey(Integer.parseInt(fakeGameID))) {
+                throw new DataAccessException("Invalid game ID");
+            }
+            var realGameID = gameIDMap.get(Integer.parseInt(fakeGameID));
             var color = params[1];
-            ServerFacade.joinGame(new JoinGameRequest(auth, color, Integer.parseInt(gameID)));
-            return "Game started!";
+            ServerFacade.joinGame(new JoinGameRequest(auth, color, realGameID));
+            return "board";
         }
         throw new DataAccessException("Expected: <gameID> [white|black]");
     }
 
     private String observe_game(String... params) throws DataAccessException {
-        if (params.length >= 1) {
+        if (params.length >= 1 && gameIDMap.containsKey(Integer.parseInt(params[0]))) {
             var gameID = params[0];
-            return "Game observed!";
+            return "board";
         }
         throw new DataAccessException("Expected: <gameID>");
     }

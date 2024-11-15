@@ -24,11 +24,13 @@ public class ClientCommunicator {
             URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod(method);
-            http.setDoOutput(true);
+            http.setDoOutput(!method.equals("GET"));
 
             setAuthHeader(http, request);
 
-            writeBody(request, http);
+            if (!method.equals("GET")) {
+                writeBody(request, http);
+            }
             http.connect();
             throwIfNotSuccessful(http);
             return readBody(http, responseClass);
@@ -76,7 +78,7 @@ public class ClientCommunicator {
         var status = http.getResponseCode();
         var somethign = http.getResponseMessage();
         if (!isSuccessful(status)) {
-            throw new DataAccessException("failure: " + status);
+            throw new DataAccessException("failure: " + status + " " + somethign);
         }
     }
 

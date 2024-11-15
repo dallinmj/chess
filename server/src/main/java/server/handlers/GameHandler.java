@@ -66,7 +66,7 @@ public class GameHandler {
             return gson.toJson(errorResponse);
         } catch (Exception e) {
             res.status(500);
-            ErrorResponse errorResponse = new ErrorResponse("Error: " + e.getMessage());
+            ErrorResponse errorResponse = new ErrorResponse("Error: " + e.getMessage() + " " + req);
             return gson.toJson(errorResponse);
         }
     }

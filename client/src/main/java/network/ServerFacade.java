@@ -38,7 +38,7 @@ public class ServerFacade {
         return clientCommunicator.makeRequest("GET", "/game", request, ListGamesResult.class);
     }
 
-    public static ClearResult clear(ClearRequest request) throws DataAccessException {
-        return clientCommunicator.makeRequest("DELETE", "/db", request, ClearResult.class);
+    public static void clear(ClearRequest request) throws DataAccessException {
+        clientCommunicator.makeRequest("DELETE", "/db", request, ClearResult.class);
     }
 }

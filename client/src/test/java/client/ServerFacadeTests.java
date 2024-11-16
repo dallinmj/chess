@@ -1,6 +1,6 @@
 package client;
 
-import dataaccess.DataAccessException;
+import network.ResponseException;
 import network.ServerFacade;
 import org.junit.jupiter.api.*;
 import requestresult.userrequestresult.LoginRequest;
@@ -33,13 +33,13 @@ public class ServerFacadeTests {
     }
 
     @BeforeEach
-    public void clear() throws DataAccessException {
+    public void clear() throws ResponseException {
          ServerFacade.clear(new ClearRequest());
     }
 
 
     @Test
-    public void loginTest() throws DataAccessException {
+    public void loginTest() throws ResponseException {
         ServerFacade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
         LoginRequest request = new LoginRequest("doug", "goodpassword");
         var result = ServerFacade.login(request);
@@ -47,14 +47,14 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void registerTest() throws DataAccessException {
+    public void registerTest() throws ResponseException {
         RegisterRequest request = new RegisterRequest("doug", "goodpassword", "Diggyemail");
         var result = ServerFacade.register(request);
         Assertions.assertNotNull(result);
     }
 
     @Test
-    public void logoutTest() throws DataAccessException {
+    public void logoutTest() throws ResponseException {
         RegisterResult registerResult = ServerFacade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
         String auth = registerResult.authToken();
 
@@ -64,7 +64,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void createGameTest() throws DataAccessException {
+    public void createGameTest() throws ResponseException {
         RegisterResult registerResult = ServerFacade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
         String auth = registerResult.authToken();
         CreateGameRequest createGameRequest = new CreateGameRequest(auth, "gamename!");
@@ -73,7 +73,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void joinGameTest() throws DataAccessException {
+    public void joinGameTest() throws ResponseException {
         RegisterResult registerResult = ServerFacade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
         String auth = registerResult.authToken();
         CreateGameRequest createGameRequest = new CreateGameRequest(auth, "gamename!");
@@ -84,7 +84,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void listGamesTest() throws DataAccessException {
+    public void listGamesTest() throws ResponseException {
         RegisterResult registerResult = ServerFacade.register(new RegisterRequest("new", "newpass", "Diggyemail"));
         String auth = registerResult.authToken();
         CreateGameRequest createGameRequest = new CreateGameRequest(auth, "newgame");

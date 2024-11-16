@@ -1,6 +1,6 @@
 package ui;
 
-import dataaccess.DataAccessException;
+import network.ResponseException;
 import network.ServerFacade;
 import requestresult.userrequestresult.LoginRequest;
 import requestresult.userrequestresult.RegisterRequest;
@@ -31,7 +31,7 @@ public class ClientLoggedOut implements Client {
                 case "quit" -> "quit";
                 default -> help();
             };
-        } catch (DataAccessException ex) {
+        } catch (ResponseException ex) {
             return ex.getMessage();
         }
     }
@@ -45,7 +45,7 @@ public class ClientLoggedOut implements Client {
                 quit""";
     }
 
-    public String login(String... params) throws DataAccessException {
+    public String login(String... params) throws ResponseException {
         if (params.length >= 2) {
             var username = params[0];
             var password = params[1];
@@ -53,10 +53,10 @@ public class ClientLoggedOut implements Client {
             String token = request.authToken();
             return "token:" + token;
         }
-        throw new DataAccessException("Expected: <username> <password>\n");
+        throw new ResponseException("Expected: <username> <password>\n");
     }
 
-    public String register(String... params) throws DataAccessException {
+    public String register(String... params) throws ResponseException {
         if (params.length >= 3) {
             var username = params[0];
             var password = params[1];
@@ -65,6 +65,6 @@ public class ClientLoggedOut implements Client {
             String token = request.authToken();
             return "token:" + token;
         }
-        throw new DataAccessException("Expected: <username> <password> <email>");
+        throw new ResponseException("Expected: <username> <password> <email>");
     }
 }

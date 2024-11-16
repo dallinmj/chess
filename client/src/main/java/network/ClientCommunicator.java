@@ -1,7 +1,6 @@
 package network;
 
 import com.google.gson.Gson;
-import dataaccess.DataAccessException;
 import requestresult.gamerequestresult.CreateGameRequest;
 import requestresult.gamerequestresult.JoinGameRequest;
 import requestresult.gamerequestresult.ListGamesRequest;
@@ -19,7 +18,7 @@ public class ClientCommunicator {
         this.serverUrl = serverURL;
     }
 
-    <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws DataAccessException {
+    <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws ResponseException {
         try {
             URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
@@ -35,7 +34,7 @@ public class ClientCommunicator {
             throwIfNotSuccessful(http);
             return readBody(http, responseClass);
         } catch (Exception ex) {
-            throw new DataAccessException(ex.getMessage());
+            throw new ResponseException(ex.getMessage());
         }
     }
 
@@ -74,11 +73,11 @@ public class ClientCommunicator {
         return response;
     }
 
-    private void throwIfNotSuccessful(HttpURLConnection http) throws DataAccessException, IOException {
+    private void throwIfNotSuccessful(HttpURLConnection http) throws ResponseException, IOException {
         var status = http.getResponseCode();
         var somethign = http.getResponseMessage();
         if (!isSuccessful(status)) {
-            throw new DataAccessException("failure: " + status + " " + somethign);
+            throw new ResponseException("failure: " + status + " " + somethign);
         }
     }
 

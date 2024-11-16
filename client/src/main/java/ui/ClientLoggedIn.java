@@ -1,6 +1,6 @@
 package ui;
 
-import dataaccess.DataAccessException;
+import network.ResponseException;
 import network.ServerFacade;
 import requestresult.gamerequestresult.CreateGameRequest;
 import requestresult.gamerequestresult.JoinGameRequest;
@@ -40,7 +40,7 @@ public class ClientLoggedIn implements Client {
                 case "quit" -> "quit";
                 default -> help();
             };
-        } catch (DataAccessException ex) {
+        } catch (ResponseException ex) {
             return ex.getMessage();
         }
     }
@@ -57,21 +57,21 @@ public class ClientLoggedIn implements Client {
                 quit""";
     }
 
-    private String logout(String... params) throws DataAccessException {
+    private String logout(String... params) throws ResponseException {
         var token = ServerFacade.logout(new LogoutRequest(auth));
         return "logout";
         }
 
-    private String create_game(String... params) throws DataAccessException {
+    private String create_game(String... params) throws ResponseException {
         if (params.length >= 1) {
             var gameName = params[0];
             var token = ServerFacade.createGame(new CreateGameRequest(auth, gameName));
             return "Game created!";
         }
-        throw new DataAccessException("Expected: <gameName>");
+        throw new ResponseException("Expected: <gameName>");
     }
 
-    private String list_games(String... params) throws DataAccessException {
+    private String list_games(String... params) throws ResponseException {
         var result = ServerFacade.listGames(new ListGamesRequest(auth));
         var games_list = result.games();
         StringBuilder games = new StringBuilder();
@@ -86,25 +86,25 @@ public class ClientLoggedIn implements Client {
         return games.toString();
     }
 
-    private String play_game(String... params) throws DataAccessException {
+    private String play_game(String... params) throws ResponseException {
         if (params.length >= 2 && (params[1].equals("white") || params[1].equals("black"))) {
             var fakeGameID = params[0];
             if (!gameIDMap.containsKey(Integer.parseInt(fakeGameID))) {
-                throw new DataAccessException("Invalid game ID");
+                throw new ResponseException("Invalid game ID");
             }
             var realGameID = gameIDMap.get(Integer.parseInt(fakeGameID));
             var color = params[1];
             ServerFacade.joinGame(new JoinGameRequest(auth, color, realGameID));
             return "board";
         }
-        throw new DataAccessException("Expected: <gameID> [white|black]");
+        throw new ResponseException("Expected: <gameID> [white|black]");
     }
 
-    private String observe_game(String... params) throws DataAccessException {
+    private String observe_game(String... params) throws ResponseException {
         if (params.length >= 1 && gameIDMap.containsKey(Integer.parseInt(params[0]))) {
             var gameID = params[0];
             return "board";
         }
-        throw new DataAccessException("Expected: <gameID>");
+        throw new ResponseException("Expected: <gameID>");
     }
 }

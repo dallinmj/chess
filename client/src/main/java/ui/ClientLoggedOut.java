@@ -47,13 +47,17 @@ public class ClientLoggedOut implements Client {
 
     public String login(String... params) throws ResponseException {
         if (params.length >= 2) {
-            var username = params[0];
-            var password = params[1];
-            var request = ServerFacade.login(new LoginRequest(username, password));
-            String token = request.authToken();
-            return "token:" + token;
+            try {
+                var username = params[0];
+                var password = params[1];
+                var request = ServerFacade.login(new LoginRequest(username, password));
+                String token = request.authToken();
+                return "token:" + token;
+            } catch (Exception e) {
+                return "Invalid username or password";
+            }
         }
-        throw new ResponseException("Expected: <username> <password>\n");
+        throw new ResponseException("Expected: <username> <password>");
     }
 
     public String register(String... params) throws ResponseException {

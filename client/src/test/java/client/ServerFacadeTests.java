@@ -3,6 +3,7 @@ package client;
 import network.ResponseException;
 import network.ServerFacade;
 import org.junit.jupiter.api.*;
+import requestresult.gamerequestresult.CreateGameResult;
 import requestresult.userrequestresult.LoginRequest;
 import requestresult.userrequestresult.LogoutRequest;
 import requestresult.userrequestresult.RegisterRequest;
@@ -47,10 +48,24 @@ public class ServerFacadeTests {
     }
 
     @Test
+    public void badLoginTest() throws ResponseException {
+        ServerFacade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
+        LoginRequest request = new LoginRequest("doug", "badpassword");
+        Assertions.assertThrows(ResponseException.class, () -> ServerFacade.login(request));
+    }
+
+    @Test
     public void registerTest() throws ResponseException {
         RegisterRequest request = new RegisterRequest("doug", "goodpassword", "Diggyemail");
         var result = ServerFacade.register(request);
         Assertions.assertNotNull(result);
+    }
+
+    @Test
+    public void badRegisterTest() throws ResponseException {
+        RegisterRequest request = new RegisterRequest("doug", "goodpassword", "Diggyemail");
+        ServerFacade.register(request);
+        Assertions.assertThrows(ResponseException.class, () -> ServerFacade.register(request));
     }
 
     @Test
@@ -64,12 +79,30 @@ public class ServerFacadeTests {
     }
 
     @Test
+    public void badLogoutTest() throws ResponseException {
+        RegisterResult registerResult = ServerFacade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
+        String auth = registerResult.authToken();
+
+        LogoutRequest logoutRequest = new LogoutRequest(auth);
+        ServerFacade.logout(logoutRequest);
+        Assertions.assertThrows(ResponseException.class, () -> ServerFacade.logout(logoutRequest));
+    }
+
+    @Test
     public void createGameTest() throws ResponseException {
         RegisterResult registerResult = ServerFacade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
         String auth = registerResult.authToken();
         CreateGameRequest createGameRequest = new CreateGameRequest(auth, "gamename!");
         var createGameResult = ServerFacade.createGame(createGameRequest);
         Assertions.assertNotNull(createGameResult);
+    }
+
+    @Test
+    public void badCreateGameTest() throws ResponseException {
+        RegisterResult registerResult = ServerFacade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
+        String auth = registerResult.authToken();
+        CreateGameRequest createGameRequest = new CreateGameRequest(auth, null);
+        Assertions.assertThrows(ResponseException.class, () -> ServerFacade.createGame(createGameRequest));
     }
 
     @Test
@@ -84,6 +117,17 @@ public class ServerFacadeTests {
     }
 
     @Test
+    public void badJoinGameTest() throws ResponseException {
+        RegisterResult registerResult = ServerFacade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
+        String auth = registerResult.authToken();
+        CreateGameResult createGameResult = ServerFacade.createGame(new CreateGameRequest(auth, "gamename!"));
+        int gameID = createGameResult.gameID();
+        JoinGameRequest joinGameRequest = new JoinGameRequest(auth, "white", gameID);
+        ServerFacade.joinGame(joinGameRequest);
+        Assertions.assertThrows(ResponseException.class, () -> ServerFacade.joinGame(joinGameRequest));
+    }
+
+    @Test
     public void listGamesTest() throws ResponseException {
         RegisterResult registerResult = ServerFacade.register(new RegisterRequest("new", "newpass", "Diggyemail"));
         String auth = registerResult.authToken();
@@ -94,5 +138,17 @@ public class ServerFacadeTests {
         ListGamesRequest listGamesRequest = new ListGamesRequest(auth);
         var listGamesResult = ServerFacade.listGames(listGamesRequest);
         Assertions.assertNotNull(listGamesResult);
+    }
+
+    @Test
+    public void badListGamesTest() throws ResponseException {
+        RegisterResult registerResult = ServerFacade.register(new RegisterRequest("new", "newpass", "Diggyemail"));
+        String auth = registerResult.authToken();
+        CreateGameRequest createGameRequest = new CreateGameRequest(auth, "newgame");
+        var createGameResult = ServerFacade.createGame(createGameRequest);
+        CreateGameRequest createGameRequest2 = new CreateGameRequest(auth, "antohergame");
+        var createGameResult2 = ServerFacade.createGame(createGameRequest);
+        ListGamesRequest listGamesRequest = new ListGamesRequest("auth");
+        Assertions.assertThrows(ResponseException.class, () -> ServerFacade.listGames(listGamesRequest));
     }
 }

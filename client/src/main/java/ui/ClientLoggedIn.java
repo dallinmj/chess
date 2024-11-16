@@ -33,10 +33,10 @@ public class ClientLoggedIn implements Client {
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
                 case "logout" -> logout(params);
-                case "create" -> create_game(params);
-                case "list" -> list_games(params);
-                case "join" -> play_game(params);
-                case "observe" -> observe_game(params);
+                case "create" -> createGame(params);
+                case "list" -> listGames(params);
+                case "join" -> playGame(params);
+                case "observe" -> observeGame(params);
                 case "quit" -> "quit";
                 default -> help();
             };
@@ -62,7 +62,7 @@ public class ClientLoggedIn implements Client {
         return "logout";
         }
 
-    private String create_game(String... params) throws ResponseException {
+    private String createGame(String... params) throws ResponseException {
         if (params.length >= 1) {
             var gameName = params[0];
             var token = ServerFacade.createGame(new CreateGameRequest(auth, gameName));
@@ -71,22 +71,23 @@ public class ClientLoggedIn implements Client {
         throw new ResponseException("Expected: <gameName>");
     }
 
-    private String list_games(String... params) throws ResponseException {
+    private String listGames(String... params) throws ResponseException {
         var result = ServerFacade.listGames(new ListGamesRequest(auth));
-        var games_list = result.games();
+        var gamesList = result.games();
         StringBuilder games = new StringBuilder();
 
         int i = 0;
-        for (var game : games_list) {
+        for (var game : gamesList) {
             i++;
             gameIDMap.put(i, game.gameID());
-            String prettyGame = "Id: " + i + " Name: <" + game.gameName() + "> White: <" + game.whiteUsername() + "> Black: <" + game.blackUsername() + ">";
+            String prettyGame = "Id: " + i + " Name: <" + game.gameName() + "> White: <"
+                    + game.whiteUsername() + "> Black: <" + game.blackUsername() + ">";
             games.append(prettyGame).append("\n");
         }
         return games.toString();
     }
 
-    private String play_game(String... params) throws ResponseException {
+    private String playGame(String... params) throws ResponseException {
         if (params.length >= 2 && (params[1].equals("white") || params[1].equals("black"))) {
             var fakeGameID = params[0];
             if (!gameIDMap.containsKey(Integer.parseInt(fakeGameID))) {
@@ -100,7 +101,7 @@ public class ClientLoggedIn implements Client {
         throw new ResponseException("Expected: <gameID> [white|black]");
     }
 
-    private String observe_game(String... params) throws ResponseException {
+    private String observeGame(String... params) throws ResponseException {
         if (params.length >= 1 && gameIDMap.containsKey(Integer.parseInt(params[0]))) {
             var gameID = params[0];
             return "board";

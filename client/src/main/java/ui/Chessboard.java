@@ -136,18 +136,6 @@ public class Chessboard {
         out.print("\n");
     }
 
-    private static void drawRow1(PrintStream out, ChessPiece[] row) {
-        for (int i = 0; i < row.length; i++) {
-            Runnable func;
-            if (i % 2 == 0) {
-                setLightSquare(out);
-            } else {
-                setDarkSquare(out);
-            }
-            drawSquare(out, row[i]);
-        }
-    }
-
     private static void setDarkSquare(PrintStream out){
         out.print(SET_BG_COLOR_BLACK);
     }

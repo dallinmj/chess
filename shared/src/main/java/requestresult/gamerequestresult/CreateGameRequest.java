@@ -1,4 +1,4 @@
-package service.requestresult.gamerequestresult;
+package requestresult.gamerequestresult;
 
 public record CreateGameRequest(String authToken, String gameName) {
 }

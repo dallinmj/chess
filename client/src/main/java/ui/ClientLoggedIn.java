@@ -2,12 +2,10 @@ package ui;
 
 import dataaccess.DataAccessException;
 import network.ServerFacade;
-import service.requestresult.gamerequestresult.CreateGameRequest;
-import service.requestresult.gamerequestresult.JoinGameRequest;
-import service.requestresult.gamerequestresult.ListGamesRequest;
-import service.requestresult.userrequestresult.LoginRequest;
-import service.requestresult.userrequestresult.LogoutRequest;
-import service.requestresult.userrequestresult.RegisterRequest;
+import requestresult.gamerequestresult.CreateGameRequest;
+import requestresult.gamerequestresult.JoinGameRequest;
+import requestresult.gamerequestresult.ListGamesRequest;
+import requestresult.userrequestresult.LogoutRequest;
 
 import java.util.Arrays;
 import java.util.Map;

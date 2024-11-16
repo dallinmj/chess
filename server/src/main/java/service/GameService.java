@@ -5,7 +5,7 @@ import dataaccess.AuthDAO;
 import dataaccess.GameDAO;
 import dataaccess.DataAccessException;
 import model.GameData;
-import service.requestresult.gamerequestresult.*;
+import requestresult.gamerequestresult.*;
 
 import java.util.Random;
 

@@ -3,12 +3,15 @@ package client;
 import dataaccess.DataAccessException;
 import network.ServerFacade;
 import org.junit.jupiter.api.*;
+import requestresult.userrequestresult.LoginRequest;
+import requestresult.userrequestresult.LogoutRequest;
+import requestresult.userrequestresult.RegisterRequest;
+import requestresult.userrequestresult.RegisterResult;
 import server.Server;
-import service.requestresult.ClearRequest;
-import service.requestresult.gamerequestresult.CreateGameRequest;
-import service.requestresult.gamerequestresult.JoinGameRequest;
-import service.requestresult.gamerequestresult.ListGamesRequest;
-import service.requestresult.userrequestresult.*;
+import requestresult.ClearRequest;
+import requestresult.gamerequestresult.CreateGameRequest;
+import requestresult.gamerequestresult.JoinGameRequest;
+import requestresult.gamerequestresult.ListGamesRequest;
 
 
 public class ServerFacadeTests {

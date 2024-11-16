@@ -2,8 +2,8 @@ package ui;
 
 import dataaccess.DataAccessException;
 import network.ServerFacade;
-import service.requestresult.userrequestresult.LoginRequest;
-import service.requestresult.userrequestresult.RegisterRequest;
+import requestresult.userrequestresult.LoginRequest;
+import requestresult.userrequestresult.RegisterRequest;
 
 import java.util.Arrays;
 

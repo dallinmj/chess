@@ -6,10 +6,8 @@ import model.UserData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import service.requestresult.*;
-import service.requestresult.userrequestresult.*;
-
-import javax.xml.crypto.Data;
+import requestresult.ClearRequest;
+import requestresult.userrequestresult.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 

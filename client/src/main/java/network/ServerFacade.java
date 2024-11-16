@@ -1,10 +1,10 @@
 package network;
 
 import dataaccess.DataAccessException;
-import service.requestresult.ClearRequest;
-import service.requestresult.ClearResult;
-import service.requestresult.gamerequestresult.*;
-import service.requestresult.userrequestresult.*;
+import requestresult.ClearRequest;
+import requestresult.ClearResult;
+import requestresult.gamerequestresult.*;
+import requestresult.userrequestresult.*;
 
 public class ServerFacade {
 

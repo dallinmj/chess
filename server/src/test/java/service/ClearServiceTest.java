@@ -7,8 +7,8 @@ import model.AuthData;
 import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.Test;
-import service.requestresult.ClearRequest;
-import service.requestresult.ClearResult;
+import requestresult.ClearRequest;
+import requestresult.ClearResult;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

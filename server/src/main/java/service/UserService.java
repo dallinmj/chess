@@ -7,9 +7,8 @@ import dataaccess.DataAccessException;
 import model.AuthData;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
-import service.requestresult.userrequestresult.*;
+import requestresult.userrequestresult.*;
 
-import java.util.Objects;
 import java.util.UUID;
 
 public class UserService {

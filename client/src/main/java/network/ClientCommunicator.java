@@ -2,10 +2,10 @@ package network;
 
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
-import service.requestresult.gamerequestresult.CreateGameRequest;
-import service.requestresult.gamerequestresult.JoinGameRequest;
-import service.requestresult.gamerequestresult.ListGamesRequest;
-import service.requestresult.userrequestresult.LogoutRequest;
+import requestresult.gamerequestresult.CreateGameRequest;
+import requestresult.gamerequestresult.JoinGameRequest;
+import requestresult.gamerequestresult.ListGamesRequest;
+import requestresult.userrequestresult.LogoutRequest;
 
 import java.io.*;
 import java.net.*;

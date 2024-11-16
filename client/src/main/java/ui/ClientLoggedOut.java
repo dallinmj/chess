@@ -11,6 +11,7 @@ public class ClientLoggedOut implements Client {
 
     public ClientLoggedOut(String serverURL) {
         ServerFacade server = new ServerFacade(serverURL);
+
     }
 
     public void run() {

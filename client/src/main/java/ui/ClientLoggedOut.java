@@ -4,8 +4,10 @@ import network.ResponseException;
 import network.ServerFacade;
 import requestresult.userrequestresult.LoginRequest;
 import requestresult.userrequestresult.RegisterRequest;
+import requestresult.userrequestresult.RegisterResult;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class ClientLoggedOut implements Client {
 
@@ -65,8 +67,17 @@ public class ClientLoggedOut implements Client {
             var username = params[0];
             var password = params[1];
             var email = params[2];
-            var request = ServerFacade.register(new RegisterRequest(username, password, email));
-            String token = request.authToken();
+            RegisterResult result;
+            try {
+                result = ServerFacade.register(new RegisterRequest(username, password, email));
+            } catch (Exception e){
+                if (Objects.equals(e.getMessage(), "failure: 403 Forbidden")) {
+                    return "Username already taken.";
+                } else {
+                    return e.getMessage();
+                }
+            }
+            String token = result.authToken();
             return "token:" + token;
         }
         throw new ResponseException("Expected: <username> <password> <email>");

@@ -9,6 +9,7 @@ import requestresult.userrequestresult.LogoutRequest;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 
 public class ClientLoggedIn implements Client {
 
@@ -35,7 +36,7 @@ public class ClientLoggedIn implements Client {
                 case "logout" -> logout(params);
                 case "create" -> createGame(params);
                 case "list" -> listGames(params);
-                case "join" -> playGame(params);
+                case "join" -> joinGame(params);
                 case "observe" -> observeGame(params);
                 case "quit" -> "quit";
                 default -> help();
@@ -87,7 +88,7 @@ public class ClientLoggedIn implements Client {
         return games.toString();
     }
 
-    private String playGame(String... params) throws ResponseException {
+    private String joinGame(String... params) throws ResponseException {
         if (params.length >= 2 && (params[1].equals("white") || params[1].equals("black"))) {
             var fakeGameID = params[0];
             if (!gameIDMap.containsKey(Integer.parseInt(fakeGameID))) {
@@ -95,8 +96,16 @@ public class ClientLoggedIn implements Client {
             }
             var realGameID = gameIDMap.get(Integer.parseInt(fakeGameID));
             var color = params[1];
-            ServerFacade.joinGame(new JoinGameRequest(auth, color, realGameID));
-            return "board";
+            try {
+                ServerFacade.joinGame(new JoinGameRequest(auth, color, realGameID));
+            }catch (Exception e){
+                if (Objects.equals(e.getMessage(), "failure: 403 Forbidden")){
+                    return "Spot already taken.";
+                } else {
+                    return e.getMessage();
+                }
+            }
+                return "board";
         }
         throw new ResponseException("Expected: <gameID> [white|black]");
     }

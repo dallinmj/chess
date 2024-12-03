@@ -1,5 +1,7 @@
 package ui;
 
+import chess.ChessBoard;
+import model.GameData;
 import network.ResponseException;
 import network.ServerFacade;
 import requestresult.gamerequestresult.CreateGameRequest;
@@ -105,7 +107,7 @@ public class ClientLoggedIn implements Client {
                     return e.getMessage();
                 }
             }
-                return "board";
+            return "board" + " " + realGameID + " " + color + " " + auth;
         }
         throw new ResponseException("Expected: <gameID> [white|black]");
     }

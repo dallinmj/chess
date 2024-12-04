@@ -41,6 +41,18 @@ public class UserGameCommand {
         return gameID;
     }
 
+    public static UserGameCommand connect(String authToken, Integer gameID) {
+        return new UserGameCommand(CommandType.CONNECT, authToken, gameID);
+    }
+
+    public static UserGameCommand leave(String authToken, Integer gameID) {
+        return new UserGameCommand(CommandType.LEAVE, authToken, gameID);
+    }
+
+    public static UserGameCommand resign(String authToken, Integer gameID) {
+        return new UserGameCommand(CommandType.RESIGN, authToken, gameID);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

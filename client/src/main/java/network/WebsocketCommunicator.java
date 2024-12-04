@@ -1,11 +1,15 @@
 package network;
 
+import chess.ChessMove;
 import com.google.gson.Gson;
+import websocket.commands.MakeMoveCommand;
+import websocket.commands.UserGameCommand;
 import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
+import java.io.IOException;
 import java.net.URI;
 import javax.websocket.*;
 
@@ -33,11 +37,47 @@ public class WebsocketCommunicator extends Endpoint {
         } catch (Exception e) {
             throw new ResponseException(e.getMessage());
         }
-
     }
 
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
+    }
+
+    public void connect(String auth, int gameId) throws ResponseException {
+        try {
+            var action = UserGameCommand.connect(auth, gameId);
+            this.session.getBasicRemote().sendText(new Gson().toJson(action));
+        } catch (IOException e) {
+            throw new ResponseException(e.getMessage());
+        }
+    }
+
+    public void makeMove(ChessMove move) throws ResponseException {
+        try {
+            var action = new MakeMoveCommand(move);
+            this.session.getBasicRemote().sendText(new Gson().toJson(action));
+        } catch (IOException e) {
+            throw new ResponseException(e.getMessage());
+        }
+    }
+
+    public void leave(String auth, int gameId) throws ResponseException {
+        try {
+            var action = UserGameCommand.leave(auth, gameId);
+            this.session.getBasicRemote().sendText(new Gson().toJson(action));
+            this.session.close();
+        } catch (IOException e) {
+            throw new ResponseException(e.getMessage());
+        }
+    }
+
+    public void resign(String auth, int gameId) throws ResponseException {
+        try {
+            var action = UserGameCommand.resign(auth, gameId);
+            this.session.getBasicRemote().sendText(new Gson().toJson(action));
+        } catch (IOException e) {
+            throw new ResponseException(e.getMessage());
+        }
     }
 
     public void loadGame(String game) throws ResponseException {
@@ -70,7 +110,6 @@ public class WebsocketCommunicator extends Endpoint {
     public void sendMessage(ServerMessage message) throws ResponseException {
         try {
             this.session.getBasicRemote().sendText(new Gson().toJson(message));
-            this.session.close();
         } catch (Exception e) {
             throw new ResponseException(e.getMessage());
         }

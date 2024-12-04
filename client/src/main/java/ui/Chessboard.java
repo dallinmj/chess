@@ -1,14 +1,25 @@
 package ui;
 
 import chess.ChessGame;
+import chess.ChessMove;
 import chess.ChessPiece;
+import chess.ChessPosition;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 
 import static ui.EscapeSequences.*;
 
 public class Chessboard {
+
+    public static void highlight(ChessPiece[][] board, ChessGame.TeamColor color, Collection<ChessMove> highlights) {
+        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+
+        out.print(ERASE_SCREEN);
+        drawBoard(out, board, color);
+        out.print("\n");
+    }
 
     public static void run(ChessPiece[][] board, ChessGame.TeamColor color) {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);

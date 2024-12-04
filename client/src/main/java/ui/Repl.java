@@ -1,8 +1,12 @@
 package ui;
 
+import chess.ChessBoard;
+import network.ServerMessageObserver;
+import websocket.messages.ServerMessage;
+
 import java.util.Scanner;
 
-public class Repl {
+public class Repl implements ServerMessageObserver {
     private Client client;
     private final String serverUrl;
 
@@ -34,8 +38,12 @@ public class Repl {
                     this.client.run();
                     result = "";
                 }
-                if (result.equals("board")) {
-//                    var board = new Chessboard();
+                if (result.contains("board")) {
+                    System.out.println(result);
+                    var gameId = result.split(" ")[1];
+                    var color = result.split(" ")[2];
+                    var auth = result.split(" ")[3];
+                    this.client = new ClientInGame(serverUrl, gameId, color, auth);
                     Chessboard.run(null, null);
                     result = "";
                 }
@@ -51,5 +59,10 @@ public class Repl {
 
     private void printPrompt() {
         System.out.print("\n>>> ");
+    }
+
+    @Override
+    public void notify(ServerMessage message) {
+        System.out.println(message);
     }
 }

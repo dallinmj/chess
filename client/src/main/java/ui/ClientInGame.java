@@ -8,25 +8,44 @@ import java.util.Collection;
 import model.GameData;
 import network.ResponseException;
 import network.ServerFacade;
+import network.ServerMessageObserver;
+import network.WebsocketCommunicator;
 import requestresult.gamerequestresult.ListGamesRequest;
+import websocket.commands.UserGameCommand;
+import websocket.messages.ServerMessage;
 
 public class ClientInGame implements Client{
 
     private final ChessBoard board;
     private final String auth;
     private final String color;
+    private WebsocketCommunicator ws;
+    private ServerMessageObserver serverMessageObserver;
 
-    public ClientInGame(String serverURL, String gameId, String auth, String color) throws ResponseException {
+    public ClientInGame(String serverURL, String gameId, String color, String auth) throws ResponseException {
         ServerFacade server = new ServerFacade(serverURL);
+        this.serverMessageObserver = new ServerMessageObserver() {
+            @Override
+            public void notify(ServerMessage message) {
+                System.out.println(message);
+            }
+        };
+        ws = new WebsocketCommunicator(serverURL, serverMessageObserver);
         this.auth = auth;
         this.board = getGame(gameId);
         this.color = color;
+
+        UserGameCommand userGameCommand = UserGameCommand.connect(auth, Integer.parseInt(gameId));
+
+        ws.loadGame(gameId);
     }
 
     private ChessBoard getGame(String gameId) throws ResponseException {
         var result = ServerFacade.listGames(new ListGamesRequest(auth));
+        System.out.println(result);
         var gamesList = result.games();
         for (var game : gamesList) {
+            System.out.println(game);
             if (String.valueOf(game.gameID()).equals(gameId)) {
                 ChessGame chessGame = game.getGame();
                 return chessGame.getBoard();
@@ -44,7 +63,7 @@ public class ClientInGame implements Client{
             return switch (cmd) {
                 case "redraw" -> redraw();
                 case "leave" -> leave();
-                case "move" -> move(params);
+                case "move" -> makeMove(params);
                 case "resign" -> resign();
                 case "highlight" -> highlight(params);
                 default -> help();
@@ -70,6 +89,23 @@ public class ClientInGame implements Client{
                 highlight <piece>""";
     }
 
+    private String resign() {
+        return "resign";
+    }
+
+    private String makeMove(String... params) {
+        return "";
+    }
+
+    private String leave() {
+        return "leave";
+    }
+
+    private String redraw() {
+//        Chessboard.run
+        return "redraw";
+    }
+
     private String highlight(String... params) {
         if (params.length < 1) {
             return "highlight requires a piece to highlight";
@@ -78,9 +114,9 @@ public class ClientInGame implements Client{
         game.setBoard(this.board);
         game.setTeamTurn(ChessGame.TeamColor.valueOf(this.color));
         Collection<ChessMove> moves = game.validMoves(new ChessPosition(params[0].charAt(0), params[0].charAt(1)));
-        ChessPiece[][] grid = null;
-        String highlights = this.board.
-        Chessboard.highlight(grid, this.color, )
+        ChessPiece[][] grid = this.board.getSquares();
+        System.out.println(moves);
+        Chessboard.highlight(grid, game.getTeamTurn(), moves);
 
         return "highlight";
     }

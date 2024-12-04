@@ -1,6 +1,9 @@
 package network;
 
 import com.google.gson.Gson;
+import websocket.messages.ErrorMessage;
+import websocket.messages.LoadGameMessage;
+import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
 import java.net.URI;
@@ -37,5 +40,40 @@ public class WebsocketCommunicator extends Endpoint {
     public void onOpen(Session session, EndpointConfig endpointConfig) {
     }
 
+    public void loadGame(String game) throws ResponseException {
+        try {
+            var message = new LoadGameMessage(game);
+            sendMessage(message);
+        } catch (ResponseException e) {
+            throw new ResponseException(e.getMessage());
+        }
+    }
+
+    public void sendNotification(String notification) throws ResponseException {
+        try {
+            var message = new NotificationMessage(notification);
+            sendMessage(message);
+        } catch (ResponseException e) {
+            throw new ResponseException(e.getMessage());
+        }
+    }
+
+    public void sendError(String error) throws ResponseException {
+        try {
+            var message = new ErrorMessage(error);
+            sendMessage(message);
+        } catch (ResponseException e) {
+            throw new ResponseException(e.getMessage());
+        }
+    }
+
+    public void sendMessage(ServerMessage message) throws ResponseException {
+        try {
+            this.session.getBasicRemote().sendText(new Gson().toJson(message));
+            this.session.close();
+        } catch (Exception e) {
+            throw new ResponseException(e.getMessage());
+        }
+    }
 
 }

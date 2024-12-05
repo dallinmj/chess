@@ -1,16 +1,43 @@
 package network;
 
+import chess.ChessMove;
 import requestresult.ClearRequest;
 import requestresult.ClearResult;
 import requestresult.gamerequestresult.*;
 import requestresult.userrequestresult.*;
+import websocket.messages.ServerMessage;
 
 public class ServerFacade {
 
     private static ClientCommunicator clientCommunicator;
+    private static WebsocketCommunicator websocketCommunicator;
 
-    public ServerFacade(String serverURL) {
+    public ServerFacade(String serverURL) throws ResponseException {
         clientCommunicator = new ClientCommunicator(serverURL);
+
+        ServerMessageObserver serverMessageObserver = new ServerMessageObserver() {
+            @Override
+            public void notify(ServerMessage message) {
+                System.out.println(message);
+            }
+        };
+        websocketCommunicator = new WebsocketCommunicator(serverURL, serverMessageObserver);
+    }
+
+    public static void connect(String auth, int gameId) throws ResponseException {
+        websocketCommunicator.connect(auth, gameId);
+    }
+
+    public static void makeMove(String auth, int gameId, ChessMove move) throws ResponseException {
+        websocketCommunicator.makeMove(auth, gameId, move);
+    }
+
+    public static void leave(String auth, int gameId) throws ResponseException {
+        websocketCommunicator.leave(auth, gameId);
+    }
+
+    public static void resign(String auth, int gameId) throws ResponseException {
+        websocketCommunicator.resign(auth, gameId);
     }
 
     public static LoginResult login(LoginRequest request) throws ResponseException {

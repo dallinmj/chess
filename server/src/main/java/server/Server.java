@@ -1,6 +1,8 @@
 package server;
 
 import dataaccess.*;
+import org.eclipse.jetty.websocket.server.WebSocketHandler;
+import server.Websocket.WebsocketHandler;
 import server.handlers.ClearHandler;
 import server.handlers.GameHandler;
 import server.handlers.UserHandler;
@@ -54,6 +56,8 @@ public class Server {
         Spark.put("/game", gameHandler::joinGame);
         Spark.delete("/db", clearHandler::clear);
 
+        Spark.webSocket("/ws", new WebsocketHandler());
+
         Spark.awaitInitialization();
         return Spark.port();
     }
@@ -62,4 +66,7 @@ public class Server {
         Spark.stop();
         Spark.awaitStop();
     }
+
+    // Implement stuff here for the Websocket stuff
+    //
 }

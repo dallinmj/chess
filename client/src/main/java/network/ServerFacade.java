@@ -24,47 +24,47 @@ public class ServerFacade {
         websocketCommunicator = new WebsocketCommunicator(serverURL, serverMessageObserver);
     }
 
-    public static void connect(String auth, int gameId) throws ResponseException {
+    public void connect(String auth, int gameId) throws ResponseException {
         websocketCommunicator.connect(auth, gameId);
     }
 
-    public static void makeMove(String auth, int gameId, ChessMove move) throws ResponseException {
+    public void makeMove(String auth, int gameId, ChessMove move) throws ResponseException {
         websocketCommunicator.makeMove(auth, gameId, move);
     }
 
-    public static void leave(String auth, int gameId) throws ResponseException {
+    public void leave(String auth, int gameId) throws ResponseException {
         websocketCommunicator.leave(auth, gameId);
     }
 
-    public static void resign(String auth, int gameId) throws ResponseException {
+    public void resign(String auth, int gameId) throws ResponseException {
         websocketCommunicator.resign(auth, gameId);
     }
 
-    public static LoginResult login(LoginRequest request) throws ResponseException {
+    public LoginResult login(LoginRequest request) throws ResponseException {
         return clientCommunicator.makeRequest("POST", "/session", request, LoginResult.class);
     }
 
-    public static LogoutResult logout(LogoutRequest request) throws ResponseException {
+    public LogoutResult logout(LogoutRequest request) throws ResponseException {
         return clientCommunicator.makeRequest("DELETE", "/session", request, LogoutResult.class);
     }
 
-    public static RegisterResult register(RegisterRequest request) throws ResponseException {
+    public RegisterResult register(RegisterRequest request) throws ResponseException {
         return clientCommunicator.makeRequest("POST", "/user", request, RegisterResult.class);
     }
 
-    public static JoinGameResult joinGame(JoinGameRequest request) throws ResponseException {
+    public JoinGameResult joinGame(JoinGameRequest request) throws ResponseException {
         return clientCommunicator.makeRequest("PUT", "/game", request, JoinGameResult.class);
     }
 
-    public static CreateGameResult createGame(CreateGameRequest request) throws ResponseException {
+    public CreateGameResult createGame(CreateGameRequest request) throws ResponseException {
         return clientCommunicator.makeRequest("POST", "/game", request, CreateGameResult.class);
     }
 
-    public static ListGamesResult listGames(ListGamesRequest request) throws ResponseException {
+    public ListGamesResult listGames(ListGamesRequest request) throws ResponseException {
         return clientCommunicator.makeRequest("GET", "/game", request, ListGamesResult.class);
     }
 
-    public static void clear(ClearRequest request) throws ResponseException {
+    public void clear(ClearRequest request) throws ResponseException {
         clientCommunicator.makeRequest("DELETE", "/db", request, ClearResult.class);
     }
 }

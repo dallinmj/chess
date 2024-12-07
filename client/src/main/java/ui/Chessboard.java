@@ -3,7 +3,6 @@ package ui;
 import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPiece;
-import chess.ChessPosition;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -24,48 +23,8 @@ public class Chessboard {
     public static void run(ChessPiece[][] board, ChessGame.TeamColor color) {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
-        board = new ChessPiece[][]{{
-                new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK),
-                new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT),
-                new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP),
-                new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN),
-                new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING),
-                new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP),
-                new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT),
-                new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK)},
-                {new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN),
-                        new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN),
-                        new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN),
-                        new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN),
-                        new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN),
-                        new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN),
-                        new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN),
-                        new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN)},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN),
-                        new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN),
-                        new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN),
-                        new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN),
-                        new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN),
-                        new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN),
-                        new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN),
-                        new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN)},
-                {new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK),
-                        new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT),
-                        new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP),
-                        new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN),
-                        new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING),
-                        new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP),
-                        new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT),
-                        new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK)}
-        };
         out.print(ERASE_SCREEN);
-        drawBoard(out, board, ChessGame.TeamColor.WHITE);
-        out.print("\n");
-        drawBoard(out, board, ChessGame.TeamColor.BLACK);
+        drawBoard(out, board, color);
     }
 
     private static void drawBoard(PrintStream out, ChessPiece[][] board, ChessGame.TeamColor color) {
@@ -101,11 +60,15 @@ public class Chessboard {
         boolean flip = (color == ChessGame.TeamColor.BLACK);
 
         drawBoarder(out, flip);
-        if(!flip){
+
+        // If black is at bottom (flip = true), print from top to bottom (i=0 to 7)
+        // and flip columns (pass flip=1 for drawRow).
+        if (flip) {
             for (int i = 0; i < 8; i++) {
-                drawRow(out, board[i], i, 0);
+                drawRow(out, board[i], i, 0); // 1 means flip columns
             }
         } else {
+            // White at bottom: print from bottom to top (7 down to 0), no column flip (0)
             for (int i = 7; i >= 0; i--) {
                 drawRow(out, board[i], i, 1);
             }
@@ -116,7 +79,7 @@ public class Chessboard {
     private static void drawRow(PrintStream out, ChessPiece[] row, int odd, int flip) {
         drawEdge(out, odd);
         for (int i = 0; i < 8; i++) {
-            int index = flip == 1 ? 7 - i : i;
+            int index = flip == 0 ? 7 - i : i;
             int evenOrOdd = i + odd ;
             if (evenOrOdd % 2 == 0 + flip) {
                 setLightSquare(out);
@@ -133,7 +96,7 @@ public class Chessboard {
     private static void drawEdge(PrintStream out, int odd) {
         out.print(SET_TEXT_COLOR_BRONZE);
         out.print(SET_BG_COLOR_DARK_BROWN);
-        out.print(" " + (8 - odd) + " ");
+        out.print(" " + (1 + odd) + " ");
     }
 
     private static void drawBoarder(PrintStream out, boolean flip) {

@@ -5,39 +5,38 @@ import requestresult.ClearRequest;
 import requestresult.ClearResult;
 import requestresult.gamerequestresult.*;
 import requestresult.userrequestresult.*;
-import websocket.messages.ServerMessage;
 
 public class ServerFacade {
 
     private static ClientCommunicator clientCommunicator;
     private static WebsocketCommunicator websocketCommunicator;
+    private ServerMessageObserver serverMessageObserver;
 
     public ServerFacade(String serverURL) throws ResponseException {
         clientCommunicator = new ClientCommunicator(serverURL);
+        websocketCommunicator = new WebsocketCommunicator(serverURL, null);
+    }
 
-        ServerMessageObserver serverMessageObserver = new ServerMessageObserver() {
-            @Override
-            public void notify(ServerMessage message) {
-                System.out.println(message);
-            }
-        };
+    public ServerFacade(String serverURL, ServerMessageObserver serverMessageObserver) throws ResponseException {
+        clientCommunicator = new ClientCommunicator(serverURL);
+        this.serverMessageObserver = serverMessageObserver;
         websocketCommunicator = new WebsocketCommunicator(serverURL, serverMessageObserver);
     }
 
-    public void connect(String auth, int gameId) throws ResponseException {
-        websocketCommunicator.connect(auth, gameId);
+    public void connect(String auth, int gameId, String color) throws ResponseException {
+        websocketCommunicator.connect(auth, gameId, color);
     }
 
     public void makeMove(String auth, int gameId, ChessMove move) throws ResponseException {
         websocketCommunicator.makeMove(auth, gameId, move);
     }
 
-    public void leave(String auth, int gameId) throws ResponseException {
-        websocketCommunicator.leave(auth, gameId);
+    public void leave(String auth, int gameId, String color) throws ResponseException {
+        websocketCommunicator.leave(auth, gameId, color);
     }
 
-    public void resign(String auth, int gameId) throws ResponseException {
-        websocketCommunicator.resign(auth, gameId);
+    public void resign(String auth, int gameId, String color) throws ResponseException {
+        websocketCommunicator.resign(auth, gameId, color);
     }
 
     public LoginResult login(LoginRequest request) throws ResponseException {

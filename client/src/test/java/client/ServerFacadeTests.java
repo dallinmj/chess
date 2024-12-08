@@ -18,10 +18,10 @@ import requestresult.gamerequestresult.ListGamesRequest;
 public class ServerFacadeTests {
 
     private static Server server;
-    static ServerFacade facade;
+    private static ServerFacade facade;
 
     @BeforeAll
-    public static void init() {
+    public static void init() throws ResponseException {
         server = new Server();
         var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
@@ -35,120 +35,120 @@ public class ServerFacadeTests {
 
     @BeforeEach
     public void clear() throws ResponseException {
-         ServerFacade.clear(new ClearRequest());
+         facade.clear(new ClearRequest());
     }
 
 
     @Test
     public void loginTest() throws ResponseException {
-        ServerFacade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
+        facade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
         LoginRequest request = new LoginRequest("doug", "goodpassword");
-        var result = ServerFacade.login(request);
+        var result = facade.login(request);
         Assertions.assertNotNull(result);
     }
 
     @Test
     public void badLoginTest() throws ResponseException {
-        ServerFacade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
+        facade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
         LoginRequest request = new LoginRequest("doug", "badpassword");
-        Assertions.assertThrows(ResponseException.class, () -> ServerFacade.login(request));
+        Assertions.assertThrows(ResponseException.class, () -> facade.login(request));
     }
 
     @Test
     public void registerTest() throws ResponseException {
         RegisterRequest request = new RegisterRequest("doug", "goodpassword", "Diggyemail");
-        var result = ServerFacade.register(request);
+        var result = facade.register(request);
         Assertions.assertNotNull(result);
     }
 
     @Test
     public void badRegisterTest() throws ResponseException {
         RegisterRequest request = new RegisterRequest("doug", "goodpassword", "Diggyemail");
-        ServerFacade.register(request);
-        Assertions.assertThrows(ResponseException.class, () -> ServerFacade.register(request));
+        facade.register(request);
+        Assertions.assertThrows(ResponseException.class, () -> facade.register(request));
     }
 
     @Test
     public void logoutTest() throws ResponseException {
-        RegisterResult registerResult = ServerFacade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
+        RegisterResult registerResult = facade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
         String auth = registerResult.authToken();
 
         LogoutRequest logoutRequest = new LogoutRequest(auth);
-        var result = ServerFacade.logout(logoutRequest);
+        var result = facade.logout(logoutRequest);
         Assertions.assertNotNull(result);
     }
 
     @Test
     public void badLogoutTest() throws ResponseException {
-        RegisterResult registerResult = ServerFacade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
+        RegisterResult registerResult = facade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
         String auth = registerResult.authToken();
 
         LogoutRequest logoutRequest = new LogoutRequest(auth);
-        ServerFacade.logout(logoutRequest);
-        Assertions.assertThrows(ResponseException.class, () -> ServerFacade.logout(logoutRequest));
+        facade.logout(logoutRequest);
+        Assertions.assertThrows(ResponseException.class, () -> facade.logout(logoutRequest));
     }
 
     @Test
     public void createGameTest() throws ResponseException {
-        RegisterResult registerResult = ServerFacade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
+        RegisterResult registerResult = facade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
         String auth = registerResult.authToken();
         CreateGameRequest createGameRequest = new CreateGameRequest(auth, "gamename!");
-        var createGameResult = ServerFacade.createGame(createGameRequest);
+        var createGameResult = facade.createGame(createGameRequest);
         Assertions.assertNotNull(createGameResult);
     }
 
     @Test
     public void badCreateGameTest() throws ResponseException {
-        RegisterResult registerResult = ServerFacade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
+        RegisterResult registerResult = facade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
         String auth = registerResult.authToken();
         CreateGameRequest createGameRequest = new CreateGameRequest(auth, null);
-        Assertions.assertThrows(ResponseException.class, () -> ServerFacade.createGame(createGameRequest));
+        Assertions.assertThrows(ResponseException.class, () -> facade.createGame(createGameRequest));
     }
 
     @Test
     public void joinGameTest() throws ResponseException {
-        RegisterResult registerResult = ServerFacade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
+        RegisterResult registerResult = facade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
         String auth = registerResult.authToken();
         CreateGameRequest createGameRequest = new CreateGameRequest(auth, "gamename!");
-        var createGameResult = ServerFacade.createGame(createGameRequest);
+        var createGameResult = facade.createGame(createGameRequest);
         JoinGameRequest joinGameRequest = new JoinGameRequest(auth, "white", createGameResult.gameID());
-        var joinGameResult = ServerFacade.joinGame(joinGameRequest);
+        var joinGameResult = facade.joinGame(joinGameRequest);
         Assertions.assertNotNull(joinGameResult);
     }
 
     @Test
     public void badJoinGameTest() throws ResponseException {
-        RegisterResult registerResult = ServerFacade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
+        RegisterResult registerResult = facade.register(new RegisterRequest("doug", "goodpassword", "Diggyemail"));
         String auth = registerResult.authToken();
-        CreateGameResult createGameResult = ServerFacade.createGame(new CreateGameRequest(auth, "gamename!"));
+        CreateGameResult createGameResult = facade.createGame(new CreateGameRequest(auth, "gamename!"));
         int gameID = createGameResult.gameID();
         JoinGameRequest joinGameRequest = new JoinGameRequest(auth, "white", gameID);
-        ServerFacade.joinGame(joinGameRequest);
-        Assertions.assertThrows(ResponseException.class, () -> ServerFacade.joinGame(joinGameRequest));
+        facade.joinGame(joinGameRequest);
+        Assertions.assertThrows(ResponseException.class, () -> facade.joinGame(joinGameRequest));
     }
 
     @Test
     public void listGamesTest() throws ResponseException {
-        RegisterResult registerResult = ServerFacade.register(new RegisterRequest("new", "newpass", "Diggyemail"));
+        RegisterResult registerResult = facade.register(new RegisterRequest("new", "newpass", "Diggyemail"));
         String auth = registerResult.authToken();
         CreateGameRequest createGameRequest = new CreateGameRequest(auth, "newgame");
-        var createGameResult = ServerFacade.createGame(createGameRequest);
+        var createGameResult = facade.createGame(createGameRequest);
         CreateGameRequest createGameRequest2 = new CreateGameRequest(auth, "antohergame");
-        var createGameResult2 = ServerFacade.createGame(createGameRequest);
+        var createGameResult2 = facade.createGame(createGameRequest);
         ListGamesRequest listGamesRequest = new ListGamesRequest(auth);
-        var listGamesResult = ServerFacade.listGames(listGamesRequest);
+        var listGamesResult = facade.listGames(listGamesRequest);
         Assertions.assertNotNull(listGamesResult);
     }
 
     @Test
     public void badListGamesTest() throws ResponseException {
-        RegisterResult registerResult = ServerFacade.register(new RegisterRequest("new", "newpass", "Diggyemail"));
+        RegisterResult registerResult = facade.register(new RegisterRequest("new", "newpass", "Diggyemail"));
         String auth = registerResult.authToken();
         CreateGameRequest createGameRequest = new CreateGameRequest(auth, "newgame");
-        var createGameResult = ServerFacade.createGame(createGameRequest);
+        var createGameResult = facade.createGame(createGameRequest);
         CreateGameRequest createGameRequest2 = new CreateGameRequest(auth, "antohergame");
-        var createGameResult2 = ServerFacade.createGame(createGameRequest);
+        var createGameResult2 = facade.createGame(createGameRequest);
         ListGamesRequest listGamesRequest = new ListGamesRequest("auth");
-        Assertions.assertThrows(ResponseException.class, () -> ServerFacade.listGames(listGamesRequest));
+        Assertions.assertThrows(ResponseException.class, () -> facade.listGames(listGamesRequest));
     }
 }

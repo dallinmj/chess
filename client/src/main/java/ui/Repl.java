@@ -1,7 +1,11 @@
 package ui;
 
-import chess.ChessBoard;
+import model.GameData;
+import network.ResponseException;
 import network.ServerMessageObserver;
+import websocket.messages.ErrorMessage;
+import websocket.messages.LoadGameMessage;
+import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
 import java.util.Scanner;
@@ -10,7 +14,7 @@ public class Repl implements ServerMessageObserver {
     private Client client;
     private final String serverUrl;
 
-    public Repl(String serverUrl) {
+    public Repl(String serverUrl) throws ResponseException {
         client = new ClientLoggedOut(serverUrl);
         this.serverUrl = serverUrl;
     }
@@ -38,13 +42,17 @@ public class Repl implements ServerMessageObserver {
                     this.client.run();
                     result = "";
                 }
+                if (result.contains("leave:")) {
+                    String token = result.split(":")[1];
+                    this.client = new ClientLoggedIn(serverUrl, token);
+                    this.client.run();
+                    result = "";
+                }
                 if (result.contains("board")) {
-                    System.out.println(result);
                     var gameId = result.split(" ")[1];
                     var color = result.split(" ")[2];
                     var auth = result.split(" ")[3];
-                    this.client = new ClientInGame(serverUrl, gameId, color, auth);
-                    Chessboard.run(null, null);
+                    this.client = new ClientInGame(serverUrl, gameId, color, auth, this);
                     result = "";
                 }
 
@@ -63,6 +71,21 @@ public class Repl implements ServerMessageObserver {
 
     @Override
     public void notify(ServerMessage message) {
-        System.out.println(message);
+        if (message instanceof LoadGameMessage loadGameMessage) {
+            GameData gameData = loadGameMessage.getGame();
+            if (this.client instanceof ClientInGame clientInGame) {
+                System.out.println("\n");
+                clientInGame.redraw(gameData);
+                printPrompt();
+            }
+        } else if (message instanceof NotificationMessage notificationMessage) {
+            String notification = notificationMessage.getMessage();
+            System.out.println(notification);
+            printPrompt();
+        } else if (message instanceof ErrorMessage errorMessage) {
+            String error = errorMessage.getErrorMessage();
+            System.out.println("Error: " + error);
+            printPrompt();
+        }
     }
 }

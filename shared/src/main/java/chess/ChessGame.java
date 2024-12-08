@@ -1,5 +1,7 @@
 package chess;
 
+import dataaccess.DataAccessException;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
@@ -14,11 +16,13 @@ public class ChessGame {
 
     private ChessBoard board;
     private TeamColor colorTurn;
+    private boolean gameOver;
 
     public ChessGame() {
         this.board = new ChessBoard();
         this.board.resetBoard();
         this.colorTurn = TeamColor.WHITE;
+        this.gameOver = false;
     }
 
     /**
@@ -51,6 +55,26 @@ public class ChessGame {
     @Override
     public int hashCode() {
         return Objects.hash(board, colorTurn);
+    }
+
+    public void end() {
+        this.gameOver = true;
+    }
+
+    public boolean isOver() {
+        return this.gameOver;
+    }
+
+    public boolean eitherTeamInCheck() {
+        return isInCheck(TeamColor.WHITE) || isInCheck(TeamColor.BLACK);
+    }
+
+    public void isCorrectPlayer(ChessMove move, String playerColor) throws DataAccessException {
+        ChessPiece piece = board.getPiece(move.getStartPosition());
+        String pieceColor = piece.getTeamColor().toString().toLowerCase();
+        if (!playerColor.equals(pieceColor)) {
+            throw new DataAccessException("Invalid move, not your piece");
+        }
     }
 
     /**
@@ -99,8 +123,14 @@ public class ChessGame {
         ChessPiece replacedPiece = board.getPiece(move.getEndPosition());
         boolean valid = false;
 
+        if (gameOver) {
+            throw new InvalidMoveException("Game is over");
+        }
+
         // Piece doesn't exist at given location
-        if (piece == null){ throw new InvalidMoveException(); }
+        if (piece == null){
+            throw new InvalidMoveException("Piece doesn't exist here");
+        }
 
         // Check if move is valid
         for (ChessMove moveToCheck : piece.pieceMoves(board, move.getStartPosition())){
@@ -109,7 +139,7 @@ public class ChessGame {
 
         // Not a valid move
         if (!valid){
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("Not a valid move");
         }
 
         // Changes promotion piece :)
@@ -130,7 +160,7 @@ public class ChessGame {
             undoMove(move, replacedPiece);
         } else if (this.getTeamTurn() != piece.getTeamColor()) {
             undoMove(move, replacedPiece);
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("Not your turn bro");
         } else {
             if (this.getTeamTurn() == TeamColor.WHITE) {
                 this.setTeamTurn(TeamColor.BLACK);
@@ -222,7 +252,13 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        return hasValidMoves(teamColor) && isInCheck(teamColor);
+        boolean inCheckMate = hasValidMoves(teamColor) && isInCheck(teamColor);
+
+        if (inCheckMate) {
+            end();
+        }
+
+        return inCheckMate;
     }
 
     /**

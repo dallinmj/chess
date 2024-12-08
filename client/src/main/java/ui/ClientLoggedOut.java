@@ -11,8 +11,10 @@ import java.util.Objects;
 
 public class ClientLoggedOut implements Client {
 
-    public ClientLoggedOut(String serverURL) {
-        ServerFacade server = new ServerFacade(serverURL);
+    private final ServerFacade server;
+
+    public ClientLoggedOut(String serverURL) throws ResponseException {
+        this.server = new ServerFacade(serverURL);
 
     }
 
@@ -52,7 +54,7 @@ public class ClientLoggedOut implements Client {
             try {
                 var username = params[0];
                 var password = params[1];
-                var request = ServerFacade.login(new LoginRequest(username, password));
+                var request = server.login(new LoginRequest(username, password));
                 String token = request.authToken();
                 return "token:" + token;
             } catch (Exception e) {
@@ -69,7 +71,7 @@ public class ClientLoggedOut implements Client {
             var email = params[2];
             RegisterResult result;
             try {
-                result = ServerFacade.register(new RegisterRequest(username, password, email));
+                result = server.register(new RegisterRequest(username, password, email));
             } catch (Exception e){
                 if (Objects.equals(e.getMessage(), "failure: 403 Forbidden")) {
                     return "Username already taken.";

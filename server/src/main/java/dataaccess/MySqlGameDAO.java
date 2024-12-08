@@ -101,6 +101,28 @@ public class MySqlGameDAO implements GameDAO{
     }
 
     @Override
+    public void removePlayer(GameData g, String color) throws DataAccessException {
+        if (color == null) {
+            color = "white";
+        }
+        String colorLower = color.toLowerCase();
+        String statement = "update Game set " + colorLower + "Username=null where gameID=?";
+        executeUpdate(statement, ps -> {
+            ps.setInt(1, g.gameID());
+        });
+    }
+
+    public void updateGame(GameData g, ChessGame game) throws DataAccessException {
+        var statement = "update Game set game=? where gameID=?";
+        var serializer = new Gson();
+        var json = serializer.toJson(game);
+        executeUpdate(statement, ps -> {
+            ps.setString(1, json);
+            ps.setInt(2, g.gameID());
+        });
+    }
+
+    @Override
     public void clearAllGames() throws DataAccessException {
         var statement = "delete from Game";
         executeUpdate(statement, ps -> {});

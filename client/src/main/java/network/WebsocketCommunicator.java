@@ -2,6 +2,8 @@ package network;
 
 import chess.ChessMove;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ErrorMessage;
@@ -27,12 +29,30 @@ public class WebsocketCommunicator extends Endpoint {
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             this.session = container.connectToServer(this, socketURI);
 
-            this.session.addMessageHandler(new MessageHandler.Whole<String>() {
-                @Override
-                public void onMessage(String message) {
-                    ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
-                    serverMessageObserver.notify(serverMessage);
+            this.session.addMessageHandler(String.class, message -> {
+                // Parse the JSON to figure out which message type we got
+                JsonObject jsonObj = JsonParser.parseString(message).getAsJsonObject();
+                ServerMessage.ServerMessageType type = ServerMessage.ServerMessageType.valueOf(
+                        jsonObj.get("serverMessageType").getAsString()
+                );
+
+                ServerMessage serverMessage;
+                switch(type) {
+                    case NOTIFICATION:
+                        serverMessage = new Gson().fromJson(message, NotificationMessage.class);
+                        break;
+                    case LOAD_GAME:
+                        serverMessage = new Gson().fromJson(message, LoadGameMessage.class);
+                        break;
+                    case ERROR:
+                        serverMessage = new Gson().fromJson(message, ErrorMessage.class);
+                        break;
+                    default:
+                        serverMessage = new Gson().fromJson(message, ServerMessage.class);
+                        break;
                 }
+
+                serverMessageObserver.notify(serverMessage);
             });
         } catch (Exception e) {
             throw new ResponseException(e.getMessage());
@@ -43,27 +63,27 @@ public class WebsocketCommunicator extends Endpoint {
     public void onOpen(Session session, EndpointConfig endpointConfig) {
     }
 
-    public void connect(String auth, int gameId) throws ResponseException {
+    public void connect(String auth, int gameId, String color) throws ResponseException {
         try {
-            var action = UserGameCommand.connect(auth, gameId);
+            var action = UserGameCommand.connect(auth, gameId, color);
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
         } catch (IOException e) {
             throw new ResponseException(e.getMessage());
         }
     }
 
-    public void makeMove(ChessMove move) throws ResponseException {
+    public void makeMove(String auth, int gameId, ChessMove move) throws ResponseException {
         try {
-            var action = new MakeMoveCommand(move);
+            var action = new MakeMoveCommand(auth, gameId, move);
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
         } catch (IOException e) {
             throw new ResponseException(e.getMessage());
         }
     }
 
-    public void leave(String auth, int gameId) throws ResponseException {
+    public void leave(String auth, int gameId, String color) throws ResponseException {
         try {
-            var action = UserGameCommand.leave(auth, gameId);
+            var action = UserGameCommand.leave(auth, gameId, color);
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
             this.session.close();
         } catch (IOException e) {
@@ -71,20 +91,11 @@ public class WebsocketCommunicator extends Endpoint {
         }
     }
 
-    public void resign(String auth, int gameId) throws ResponseException {
+    public void resign(String auth, int gameId, String color) throws ResponseException {
         try {
-            var action = UserGameCommand.resign(auth, gameId);
+            var action = UserGameCommand.resign(auth, gameId, color);
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
         } catch (IOException e) {
-            throw new ResponseException(e.getMessage());
-        }
-    }
-
-    public void loadGame(String game) throws ResponseException {
-        try {
-            var message = new LoadGameMessage(game);
-            sendMessage(message);
-        } catch (ResponseException e) {
             throw new ResponseException(e.getMessage());
         }
     }

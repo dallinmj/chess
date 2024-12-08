@@ -60,4 +60,13 @@ public class UserService {
         authDAO.deleteAuth(authData);
         return new LogoutResult();
     }
+
+    public String getUsernameFromAuth(String authToken) throws DataAccessException {
+        AuthData authData = authDAO.getAuth(authToken);
+        return authData.getUsername();
+    }
+
+    public void notValidAuth(String authToken) throws DataAccessException {
+        authDAO.getAuth(authToken);
+    }
 }

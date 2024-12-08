@@ -17,9 +17,10 @@ public class ClientLoggedIn implements Client {
 
     private final String auth;
     private final Map<Integer, Integer> gameIDMap;
+    private final ServerFacade server;
 
-    public ClientLoggedIn(String serverURL, String auth) {
-        ServerFacade server = new ServerFacade(serverURL);
+    public ClientLoggedIn(String serverURL, String auth) throws ResponseException {
+        this.server = new ServerFacade(serverURL);
         this.auth = auth;
         this.gameIDMap = new java.util.HashMap<>(Map.of());
     }
@@ -61,21 +62,21 @@ public class ClientLoggedIn implements Client {
     }
 
     private String logout(String... params) throws ResponseException {
-        var token = ServerFacade.logout(new LogoutRequest(auth));
+        var token = server.logout(new LogoutRequest(auth));
         return "logout";
         }
 
     private String createGame(String... params) throws ResponseException {
         if (params.length >= 1) {
             var gameName = params[0];
-            var token = ServerFacade.createGame(new CreateGameRequest(auth, gameName));
+            var token = server.createGame(new CreateGameRequest(auth, gameName));
             return "Game created!";
         }
         throw new ResponseException("Expected: <gameName>");
     }
 
     private String listGames(String... params) throws ResponseException {
-        var result = ServerFacade.listGames(new ListGamesRequest(auth));
+        var result = server.listGames(new ListGamesRequest(auth));
         var gamesList = result.games();
         StringBuilder games = new StringBuilder();
 
@@ -99,7 +100,7 @@ public class ClientLoggedIn implements Client {
             var realGameID = gameIDMap.get(Integer.parseInt(fakeGameID));
             var color = params[1];
             try {
-                ServerFacade.joinGame(new JoinGameRequest(auth, color, realGameID));
+                server.joinGame(new JoinGameRequest(auth, color, realGameID));
             }catch (Exception e){
                 if (Objects.equals(e.getMessage(), "failure: 403 Forbidden")){
                     return "Spot already taken.";
@@ -114,8 +115,9 @@ public class ClientLoggedIn implements Client {
 
     private String observeGame(String... params) throws ResponseException {
         if (params.length >= 1 && gameIDMap.containsKey(Integer.parseInt(params[0]))) {
-            var gameID = params[0];
-            return "board";
+            var fakeGameID = params[0];
+            var realGameID = gameIDMap.get(Integer.parseInt(fakeGameID));
+            return "board " + realGameID + " " + null + " " + auth;
         }
         throw new ResponseException("Expected: <gameID>");
     }

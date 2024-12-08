@@ -22,13 +22,12 @@ public class ConnectionManager {
 
     public void broadcast(String excludeAuth, int gameId, ServerMessage message) throws IOException {
         var removeList = new ArrayList<Connection>();
-        System.out.println("Broadcasting message: " + message.toString());
-        System.out.println(connections.values());
         for (var c : connections.values()) {
-            System.out.println("connection: " + c.auth + " " + c.gameId + " Excluded Auth: " + excludeAuth);
             if (c.session.isOpen()) {
                 if (!c.auth.equals(excludeAuth) && c.gameId == gameId) {
-                    c.send(new Gson().toJson(message));
+                    String jsonMessage = new Gson().toJson(message);
+                    c.send(jsonMessage);
+
                 }
             } else {
                 removeList.add(c);

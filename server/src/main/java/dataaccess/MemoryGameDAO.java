@@ -1,5 +1,6 @@
 package dataaccess;
 
+import chess.ChessGame;
 import model.GameData;
 
 import java.util.ArrayList;
@@ -12,6 +13,11 @@ public class MemoryGameDAO implements GameDAO {
     @Override
     public void createGame(GameData g) throws DataAccessException {
         games.add(g);
+    }
+
+    @Override
+    public void updateGame(GameData g, ChessGame game) throws DataAccessException {
+        throw new DataAccessException("Not implemented");
     }
 
     @Override
@@ -51,6 +57,11 @@ public class MemoryGameDAO implements GameDAO {
         }
         games.remove(g);
         games.add(updatedGame);
+    }
+
+    @Override
+    public void removePlayer(GameData g, String color) throws DataAccessException {
+        throw new DataAccessException("Not implemented");
     }
 
     @Override

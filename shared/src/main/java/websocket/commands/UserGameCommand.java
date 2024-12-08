@@ -15,11 +15,26 @@ public class UserGameCommand {
     private final String authToken;
 
     private final Integer gameID;
+    
+    private final String color;
+    
+    
+    public UserGameCommand(CommandType commandType, String authToken, Integer gameID, String color) {
+        this.commandType = commandType;
+        this.authToken = authToken;
+        this.gameID = gameID;
+        this.color = color;
+    }
 
     public UserGameCommand(CommandType commandType, String authToken, Integer gameID) {
         this.commandType = commandType;
         this.authToken = authToken;
         this.gameID = gameID;
+        this.color = null;
+    }
+
+    public String getColor() {
+        return color;
     }
 
     public enum CommandType {
@@ -41,16 +56,16 @@ public class UserGameCommand {
         return gameID;
     }
 
-    public static UserGameCommand connect(String authToken, Integer gameID) {
-        return new UserGameCommand(CommandType.CONNECT, authToken, gameID);
+    public static UserGameCommand connect(String authToken, Integer gameID, String color) {
+        return new UserGameCommand(CommandType.CONNECT, authToken, gameID, color);
     }
 
-    public static UserGameCommand leave(String authToken, Integer gameID) {
-        return new UserGameCommand(CommandType.LEAVE, authToken, gameID);
+    public static UserGameCommand leave(String authToken, Integer gameID, String color) {
+        return new UserGameCommand(CommandType.LEAVE, authToken, gameID, color);
     }
 
-    public static UserGameCommand resign(String authToken, Integer gameID) {
-        return new UserGameCommand(CommandType.RESIGN, authToken, gameID);
+    public static UserGameCommand resign(String authToken, Integer gameID, String color) {
+        return new UserGameCommand(CommandType.RESIGN, authToken, gameID, color);
     }
 
     @Override

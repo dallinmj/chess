@@ -48,6 +48,8 @@ public class Server {
         GameHandler gameHandler = new GameHandler(gameService);
         ClearHandler clearHandler = new ClearHandler(clearService);
 
+        Spark.webSocket("/ws", new WebsocketHandler(gameService, userService));
+
         Spark.post("/user", userHandler::register);
         Spark.post("/session", userHandler::login);
         Spark.delete("/session", userHandler::logout);
@@ -55,8 +57,6 @@ public class Server {
         Spark.get("/game", gameHandler::listGames);
         Spark.put("/game", gameHandler::joinGame);
         Spark.delete("/db", clearHandler::clear);
-
-        Spark.webSocket("/ws", new WebsocketHandler());
 
         Spark.awaitInitialization();
         return Spark.port();
@@ -67,6 +67,4 @@ public class Server {
         Spark.awaitStop();
     }
 
-    // Implement stuff here for the Websocket stuff
-    //
 }

@@ -16,23 +16,25 @@ public class Chessboard {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
         out.print(ERASE_SCREEN);
-        drawBoard(out, board, color);
-        out.print("\n");
+        drawBoard(out, board, color, highlights);
     }
 
     public static void run(ChessPiece[][] board, ChessGame.TeamColor color) {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
         out.print(ERASE_SCREEN);
-        drawBoard(out, board, color);
+        drawBoard(out, board, color, null);
     }
 
-    private static void drawBoard(PrintStream out, ChessPiece[][] board, ChessGame.TeamColor color) {
-        drawRows(out, board, color);
+    private static void drawBoard(PrintStream out, ChessPiece[][] board, ChessGame.TeamColor color, Collection<ChessMove> highlights) {
+        drawRows(out, board, color, highlights);
         out.print(SET_TEXT_COLOR_WHITE);
     }
 
-    private static void drawSquare(PrintStream out, ChessPiece piece){
+    private static void drawSquare(PrintStream out, ChessPiece piece, boolean isHighlighted, boolean isLight) {
+        if (isHighlighted) {
+            setHighlightSquare(out, isLight);
+        }
         printPiece(out, piece);
     }
 
@@ -56,7 +58,7 @@ public class Chessboard {
             }
         }
 
-    private static void drawRows(PrintStream out, ChessPiece[][] board, ChessGame.TeamColor color) {
+    private static void drawRows(PrintStream out, ChessPiece[][] board, ChessGame.TeamColor color, Collection<ChessMove> highlights) {
         boolean flip = (color == ChessGame.TeamColor.BLACK);
 
         drawBoarder(out, flip);
@@ -65,32 +67,50 @@ public class Chessboard {
         // and flip columns (pass flip=1 for drawRow).
         if (flip) {
             for (int i = 0; i < 8; i++) {
-                drawRow(out, board[i], i, 0); // 1 means flip columns
+                drawRow(out, board[i], i, 0, highlights); // 1 means flip columns
             }
         } else {
             // White at bottom: print from bottom to top (7 down to 0), no column flip (0)
             for (int i = 7; i >= 0; i--) {
-                drawRow(out, board[i], i, 1);
+                drawRow(out, board[i], i, 1, highlights);
             }
         }
         drawBoarder(out, flip);
     }
 
-    private static void drawRow(PrintStream out, ChessPiece[] row, int odd, int flip) {
-        drawEdge(out, odd);
-        for (int i = 0; i < 8; i++) {
-            int index = flip == 0 ? 7 - i : i;
-            int evenOrOdd = i + odd ;
+    private static void drawRow(PrintStream out, ChessPiece[] row, int rowIndex, int flip, Collection<ChessMove> highlights) {
+        drawEdge(out, rowIndex);
+        for (int col = 0; col < 8; col++) {
+            int index = flip == 0 ? 7 - col : col;
+            int evenOrOdd = col + rowIndex;
+
+            boolean isHighlighted = isSquareHighlighted(rowIndex, index, highlights);
+
+            boolean isLight = false;
             if (evenOrOdd % 2 == 0 + flip) {
                 setLightSquare(out);
+                isLight = true;
             } else {
                 setDarkSquare(out);
             }
-            drawSquare(out, row[index]);
+
+            drawSquare(out, row[index], isHighlighted, isLight);
         }
-        drawEdge(out, odd);
+        drawEdge(out, rowIndex);
         out.print(RESET_BG_COLOR);
         out.print("\n");
+    }
+
+    private static boolean isSquareHighlighted(int row, int col, Collection<ChessMove> highlights) {
+        if (highlights == null) {
+            return false;
+        }
+        for (ChessMove move : highlights) {
+            if (move.getEndPosition().getRow() - 1 == row && move.getEndPosition().getColumn() - 1 == col) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static void drawEdge(PrintStream out, int odd) {
@@ -110,6 +130,13 @@ public class Chessboard {
         out.print("\n");
     }
 
+    private static void setHighlightSquare(PrintStream out, boolean isLight) {
+        if (isLight) {
+            out.print(SET_BG_COLOR_YELLOW);
+        } else {
+            out.print(SET_BG_COLOR_DARK_YELLOW);
+        }
+    }
     private static void setDarkSquare(PrintStream out){
         out.print(SET_BG_COLOR_BLACK);
     }

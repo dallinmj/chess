@@ -1,7 +1,5 @@
 package chess;
 
-import dataaccess.DataAccessException;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;

@@ -69,11 +69,11 @@ public class ChessGame {
         return isInCheck(TeamColor.WHITE) || isInCheck(TeamColor.BLACK);
     }
 
-    public void isCorrectPlayer(ChessMove move, String playerColor) throws DataAccessException {
+    public void isCorrectPlayer(ChessMove move, String playerColor) throws InvalidMoveException {
         ChessPiece piece = board.getPiece(move.getStartPosition());
         String pieceColor = piece.getTeamColor().toString().toLowerCase();
         if (!playerColor.equals(pieceColor)) {
-            throw new DataAccessException("Invalid move, not your piece");
+            throw new InvalidMoveException("Invalid move, not your piece");
         }
     }
 

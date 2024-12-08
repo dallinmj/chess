@@ -2,6 +2,7 @@ package service;
 
 import chess.ChessGame;
 import chess.ChessMove;
+import chess.InvalidMoveException;
 import dataaccess.AuthDAO;
 import dataaccess.GameDAO;
 import dataaccess.DataAccessException;
@@ -83,7 +84,7 @@ public class GameService {
         gameDAO.getGame(gameID);
     }
 
-    public void notValidMove(int gameID, ChessMove move, String auth) throws DataAccessException {
+    public void notValidMove(int gameID, ChessMove move, String auth) throws DataAccessException, InvalidMoveException {
         GameData gameData = gameDAO.getGame(gameID);
         ChessGame game = gameData.game();
         String username = authDAO.getUsername(auth);

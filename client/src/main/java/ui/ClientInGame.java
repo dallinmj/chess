@@ -20,7 +20,8 @@ public class ClientInGame implements Client{
     private ChessBoard board;
     private GameData gameData;
 
-    public ClientInGame(String serverURL, String gameId, String color, String auth, ServerMessageObserver serverMessageObserver) throws ResponseException {
+    public ClientInGame(String serverURL, String gameId, String color, String auth,
+                        ServerMessageObserver serverMessageObserver) throws ResponseException {
         this.server = new ServerFacade(serverURL, serverMessageObserver);
         this.auth = auth;
         this.color = color;
@@ -64,18 +65,12 @@ public class ClientInGame implements Client{
     }
 
     private String resign() throws ResponseException {
-//        if (Objects.equals(this.color, "null")) {
-//            return "\n>>> Error: You are an observer\n";
-//        }
 
         server.resign(auth, gameId, this.color);
         return !Objects.equals(this.color, "null") ? "\n>>> You have resigned :(\n" : "";
     }
 
     public String makeMove(String... params) throws ResponseException {
-//        if (Objects.equals(this.color, "null")) {
-//            return "\n>>> Error: You are an observer\n";
-//        }
 
         ChessGame game = this.gameData.getGame();
         if (!Objects.equals(this.color, game.getTeamTurn().toString().toLowerCase())) {

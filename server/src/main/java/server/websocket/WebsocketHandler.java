@@ -1,4 +1,4 @@
-package server.Websocket;
+package server.websocket;
 
 import chess.ChessMove;
 import com.google.gson.Gson;
@@ -65,8 +65,8 @@ public class WebsocketHandler {
     private void connect(String auth, int gameId, String color, Session session) throws IOException, DataAccessException {
         connections.add(auth, gameId, session);
 
-        var LoadGameResult = gameService.loadGame(new LoadGameRequest(auth, gameId));
-        var gameData = LoadGameResult.gameData();
+        var loadGameResult = gameService.loadGame(new LoadGameRequest(auth, gameId));
+        var gameData = loadGameResult.gameData();
         var loadGameMessage = new LoadGameMessage(gameData);
         session.getRemote().sendString(new Gson().toJson(loadGameMessage));
 

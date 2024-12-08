@@ -1,8 +1,7 @@
 package server;
 
 import dataaccess.*;
-import org.eclipse.jetty.websocket.server.WebSocketHandler;
-import server.Websocket.WebsocketHandler;
+import server.websocket.WebsocketHandler;
 import server.handlers.ClearHandler;
 import server.handlers.GameHandler;
 import server.handlers.UserHandler;

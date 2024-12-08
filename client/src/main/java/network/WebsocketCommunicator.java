@@ -99,31 +99,4 @@ public class WebsocketCommunicator extends Endpoint {
             throw new ResponseException(e.getMessage());
         }
     }
-
-    public void sendNotification(String notification) throws ResponseException {
-        try {
-            var message = new NotificationMessage(notification);
-            sendMessage(message);
-        } catch (ResponseException e) {
-            throw new ResponseException(e.getMessage());
-        }
-    }
-
-    public void sendError(String error) throws ResponseException {
-        try {
-            var message = new ErrorMessage(error);
-            sendMessage(message);
-        } catch (ResponseException e) {
-            throw new ResponseException(e.getMessage());
-        }
-    }
-
-    public void sendMessage(ServerMessage message) throws ResponseException {
-        try {
-            this.session.getBasicRemote().sendText(new Gson().toJson(message));
-        } catch (Exception e) {
-            throw new ResponseException(e.getMessage());
-        }
-    }
-
 }

@@ -133,14 +133,14 @@ public class ClientInGame implements Client{
 
     private String highlight(String... params) {
         if (params.length < 1) {
-            return "highlight requires a piece to highlight";
+            return "\n>>>highlight requires a piece to highlight\n";
         }
 
         ChessGame game = this.gameData.getGame();
         ChessPosition position = parsePosition(params[0]);
 
         if (position.getColumn() < 1 || position.getColumn() > 8 || position.getRow() < 1 || position.getRow() > 8) {
-            return "highlight requires a valid position";
+            return "\n>>>highlight requires a valid position\n";
         }
 
         Collection<ChessMove> moves = game.validMoves(position);

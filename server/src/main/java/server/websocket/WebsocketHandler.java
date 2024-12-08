@@ -113,12 +113,14 @@ public class WebsocketHandler {
             if (gameService.isInCheckmate(updatedGameData)) {
                 var checkmateMessage = new NotificationMessage("Player in checkmate! Game over!");
                 connections.broadcast(null, gameID, checkmateMessage);
+                gameService.endGame(auth, gameID);
             } else if (gameService.isInCheck(updatedGameData)) {
                 var checkMessage = new NotificationMessage("Player in check!");
                 connections.broadcast(null, gameID, checkMessage);
             } else if (gameService.isInStalemate(updatedGameData)) {
                 var stalemateMessage = new NotificationMessage("Game in stalemate! Game over!");
                 connections.broadcast(null, gameID, stalemateMessage);
+                gameService.endGame(auth, gameID);
             }
 
         } catch (DataAccessException e) {

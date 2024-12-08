@@ -67,18 +67,38 @@ public class ClientInGame implements Client{
     private String resign() throws ResponseException {
 
         server.resign(auth, gameId, this.color);
-        return !Objects.equals(this.color, "null") ? "\n>>> You have resigned :(\n" : "";
+        return "";
     }
 
     public String makeMove(String... params) throws ResponseException {
 
+        String invalid = "\n>>> Error: Invalid move\n";
+
         ChessGame game = this.gameData.getGame();
         if (!Objects.equals(this.color, game.getTeamTurn().toString().toLowerCase())) {
-            return "\n>>> Error: It is not your turn\n";
+            return invalid;
+        }
+
+        if (params.length != 2) {
+            return invalid;
+        }
+
+        if (params[0].length() != 2 || params[1].length() != 2) {
+            return invalid;
         }
 
         ChessPosition from = parsePosition(params[0]);
         ChessPosition to = parsePosition(params[1]);
+
+        if (from.equals(to)) {
+            return invalid;
+        }
+
+        if (to.getColumn() < 1 || to.getColumn() > 8 || from.getColumn() < 1 || from.getColumn() > 8
+                || from.getRow() < 1 || to.getRow() > 8 || from.getRow() > 8 || to.getRow() < 1) {
+            return invalid;
+        }
+
         ChessMove move = new ChessMove(from, to, null); // Fix promotion
         server.makeMove(auth, gameId, move);
         return "";
@@ -115,8 +135,14 @@ public class ClientInGame implements Client{
         if (params.length < 1) {
             return "highlight requires a piece to highlight";
         }
+
         ChessGame game = this.gameData.getGame();
         ChessPosition position = parsePosition(params[0]);
+
+        if (position.getColumn() < 1 || position.getColumn() > 8 || position.getRow() < 1 || position.getRow() > 8) {
+            return "highlight requires a valid position";
+        }
+
         Collection<ChessMove> moves = game.validMoves(position);
         ChessPiece[][] grid = this.board.getSquares();
 

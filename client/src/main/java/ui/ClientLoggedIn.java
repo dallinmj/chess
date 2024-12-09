@@ -94,6 +94,11 @@ public class ClientLoggedIn implements Client {
     private String joinGame(String... params) throws ResponseException {
         if (params.length >= 2 && (params[1].equals("white") || params[1].equals("black"))) {
             var fakeGameID = params[0];
+
+            if (!fakeGameID.matches("\\d+")) {
+                throw new ResponseException("Invalid game ID");
+            }
+
             if (!gameIDMap.containsKey(Integer.parseInt(fakeGameID))) {
                 throw new ResponseException("Invalid game ID");
             }

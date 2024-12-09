@@ -5,6 +5,7 @@ import chess.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Scanner;
 
 import model.GameData;
 import network.ResponseException;
@@ -19,6 +20,7 @@ public class ClientInGame implements Client{
     private final int gameId;
     private ChessBoard board;
     private GameData gameData;
+    private final Scanner scanner;
 
     public ClientInGame(String serverURL, String gameId, String color, String auth,
                         ServerMessageObserver serverMessageObserver) throws ResponseException {
@@ -27,6 +29,7 @@ public class ClientInGame implements Client{
         this.color = color;
         this.gameId = Integer.parseInt(gameId);
         server.connect(auth, this.gameId, this.color);
+        this.scanner = new Scanner(System.in);
     }
 
     @Override
@@ -65,8 +68,11 @@ public class ClientInGame implements Client{
     }
 
     private String resign() throws ResponseException {
-
-        server.resign(auth, gameId, this.color);
+        System.out.print("\n>>> Are you sure you want to resign? (yes/no): ");
+        String input = scanner.nextLine().trim().toLowerCase();
+        if (input.equals("yes") || input.equals("y")) {
+            server.resign(auth, gameId, this.color);
+        }
         return "";
     }
 
@@ -99,9 +105,45 @@ public class ClientInGame implements Client{
             return invalid;
         }
 
-        ChessMove move = new ChessMove(from, to, null); // Fix promotion
+        ChessPiece.PieceType promotion = checkPromotion(from, to, game);
+
+        ChessMove move = new ChessMove(from, to, promotion);
         server.makeMove(auth, gameId, move);
         return "";
+    }
+
+    private ChessPiece.PieceType checkPromotion(ChessPosition from, ChessPosition to, ChessGame game) throws ResponseException {
+        ChessPiece piece = game.getBoard().getPiece(from);
+
+        // Ensure the piece is a pawn
+        if (piece == null || piece.getPieceType() != ChessPiece.PieceType.PAWN) {
+            return null;
+        }
+
+        // Check if the pawn has reached the last rank
+        boolean isWhitePromotion = piece.getTeamColor() == ChessGame.TeamColor.WHITE && to.getRow() == 8;
+        boolean isBlackPromotion = piece.getTeamColor() == ChessGame.TeamColor.BLACK && to.getRow() == 1;
+
+        if (isWhitePromotion || isBlackPromotion) {
+            ChessPiece.PieceType promotion = null;
+
+            while (promotion == null) {
+                System.out.print("\n>>> Select a piece to promote to (queen, rook, bishop, knight): ");
+                String input = scanner.nextLine().trim().toLowerCase();
+
+                switch (input) {
+                    case "queen", "q" -> promotion = ChessPiece.PieceType.QUEEN;
+                    case "rook", "r" -> promotion = ChessPiece.PieceType.ROOK;
+                    case "bishop", "b" -> promotion = ChessPiece.PieceType.BISHOP;
+                    case "knight", "n" -> promotion = ChessPiece.PieceType.KNIGHT;
+                    default -> System.out.println("Invalid input. Please enter queen, rook, bishop, or knight.");
+                }
+            }
+
+            return promotion;
+        }
+
+        return null;
     }
 
     private ChessPosition parsePosition(String position) {

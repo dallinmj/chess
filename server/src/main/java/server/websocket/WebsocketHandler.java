@@ -111,11 +111,11 @@ public class WebsocketHandler {
             connections.broadcast(auth, gameID, notification);
 
             if (gameService.isInCheckmate(updatedGameData)) {
-                var checkmateMessage = new NotificationMessage("Player in checkmate! Game over!");
+                var checkmateMessage = new NotificationMessage(String.format("%s in checkmate! Game over!", username));
                 connections.broadcast(null, gameID, checkmateMessage);
                 gameService.endGame(auth, gameID);
             } else if (gameService.isInCheck(updatedGameData)) {
-                var checkMessage = new NotificationMessage("Player in check!");
+                var checkMessage = new NotificationMessage(String.format("%s in check!", username));
                 connections.broadcast(null, gameID, checkMessage);
             } else if (gameService.isInStalemate(updatedGameData)) {
                 var stalemateMessage = new NotificationMessage("Game in stalemate! Game over!");
